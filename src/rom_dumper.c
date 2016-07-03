@@ -8,6 +8,7 @@
 int main( int argc, char** argv ) 
 {
 	int cur_arg 					= 0;
+	int dump_rom_flag				= 0;
 
 	char *rom_path					= NULL;
 	char *relative_search_text		= NULL;
@@ -16,7 +17,7 @@ int main( int argc, char** argv )
 
 	unsigned long rom_length		= 0;
 	
-	while( (cur_arg = getopt( argc, argv, "f:r:" ) ) != -1 )
+	while( (cur_arg = getopt( argc, argv, "f:r:d" ) ) != -1 )
 	{
 		switch( cur_arg )
 		{
@@ -25,6 +26,9 @@ int main( int argc, char** argv )
 				break;
 			case 'r':
 				relative_search_text = optarg;
+				break;
+			case 'd':
+				dump_rom_flag = 1;
 				break;
 			case '?':
 				if( optopt == 'f' )
@@ -58,7 +62,10 @@ int main( int argc, char** argv )
 
 		dump_rom_into_buffer( rom_path, rom_buffer, rom_length );
 
-		print_buffer_contents_f( rom_buffer, 100);
+		if( dump_rom_flag ) 
+		{
+			print_buffer_contents_f( rom_buffer, rom_length );
+		}
 
 		free( rom_buffer );
 	}

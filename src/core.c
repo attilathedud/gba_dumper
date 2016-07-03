@@ -51,7 +51,7 @@ void print_buffer_contents_f( unsigned char* buffer, unsigned long len_to_displa
 	     if (i % 4 == 3)
 	         printf(" ");
 
-	     if (i % 16 == 15)
+	     if (i % 32 == 31)
 	         printf("\n");
 	}	
 
