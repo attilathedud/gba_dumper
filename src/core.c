@@ -41,20 +41,3 @@ int dump_rom_into_buffer( char *rom_path, unsigned char *buffer, unsigned long r
 
 	return 0;
 }
-
-//TODO: pull out of core, display stuff doesn't belong here
-void print_buffer_contents_f( unsigned char *buffer, unsigned long len_to_display )
-{
-	for ( int i = 0; i < len_to_display; i++ )
-	{
-	     printf( "%.2X", buffer[ i ] );
-
-	     if (i % 4 == 3)
-	         printf(" ");
-
-	     if (i % 32 == 31)
-	         printf("\n");
-	}	
-
-	printf("\n");
-}

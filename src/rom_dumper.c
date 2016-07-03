@@ -8,6 +8,7 @@
 
 #include "../include/core.h"
 #include "../include/searching.h"
+#include "../include/output.h"
 
 #define MAX_LOCATION_MATCHES 25
 
@@ -99,16 +100,7 @@ int main( int argc, char** argv )
 			int amount_of_matches = relative_search( rom_buffer, rom_length, location_matches, MAX_LOCATION_MATCHES, 
 				relative_search_text, unicode_flag, fuzz_value);
 
-			for( int i = 0; i < amount_of_matches; i++ )
-			{
-				printf("0x%.8lX\t", location_matches[ i ]);
-				for( int c = 0; c < strlen( relative_search_text ) * (unicode_flag ? 2 : 1); c++ )
-				{
-					printf("%.2X", rom_buffer[ location_matches[ i ] + c ]);
-				}
-
-				printf("\n");
-			}
+			print_match_list( rom_buffer, location_matches, amount_of_matches, strlen( relative_search_text ), unicode_flag );
 		}
 
 		free( rom_buffer );
