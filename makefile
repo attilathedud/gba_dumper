@@ -1,13 +1,13 @@
 CC = gcc
 CFLAGS = -Wall
 
-DEPS = include/core.h
+DEPS = include/core.h include/searching.h
 
 %.o: %.c $(DEPS)
 	$(CC) -c -o $@ $< $(CFLAGS)
 
-all: src/rom_dumper.c src/core.c
-	$(CC) -o rom_dumper src/rom_dumper.c src/core.c $(CFLAGS)
+all: src/rom_dumper.c src/core.c src/searching.c
+	$(CC) -o rom_dumper src/rom_dumper.c src/core.c src/searching.c $(CFLAGS)
 
 .PHONY: clean
 

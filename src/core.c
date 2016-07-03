@@ -42,7 +42,8 @@ int dump_rom_into_buffer( char *rom_path, unsigned char *buffer, unsigned long r
 	return 0;
 }
 
-void print_buffer_contents_f( unsigned char* buffer, unsigned long len_to_display )
+//TODO: pull out of core, display stuff doesn't belong here
+void print_buffer_contents_f( unsigned char *buffer, unsigned long len_to_display )
 {
 	for ( int i = 0; i < len_to_display; i++ )
 	{
