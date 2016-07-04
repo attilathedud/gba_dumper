@@ -6,11 +6,20 @@
 #include <errno.h>
 #include <limits.h>
 
-#include "../include/core.h"
-#include "../include/searching.h"
-#include "../include/output.h"
+#ifndef COMMON_H
+#define COMMON_H
+	#include "../include/common.h"
+#endif
 
-#define MAX_LOCATION_MATCHES 25
+#include "../include/core.h"
+
+#ifndef SEARCHING_H
+#define SEARCHING_H
+	#include "../include/searching.h"
+#endif
+
+#include "../include/output.h"
+#include "../include/translate.h"
 
 int main( int argc, char** argv ) 
 {
@@ -19,20 +28,19 @@ int main( int argc, char** argv )
 	int unicode_flag				= 0;
 	int fuzz_value					= 0;
 
-	char *rom_path					= NULL;
 	char *relative_search_text		= NULL;
 	char *temp_end_for_conversion 	= NULL;
 
-	unsigned char *rom_buffer		= NULL;
+	char translate_file_path[ MAX_PATH_LENGTH ] = { 0 };
 
-	unsigned long rom_length		= 0;
+	rom_file rom = { 0 };
 	
 	while( (cur_arg = getopt( argc, argv, "f:r:duz:" ) ) != -1 )
 	{
 		switch( cur_arg )
 		{
 			case 'f':
-				rom_path = optarg;
+				rom.rom_path = optarg;
 				break;
 			case 'r':
 				relative_search_text = optarg;
@@ -80,30 +88,48 @@ int main( int argc, char** argv )
 		}
 	}
 
-	if( rom_path != NULL )
+	if( rom.rom_path != NULL )
 	{
-		rom_length = get_rom_length( rom_path );
+		if( get_rom_length( &rom ) == -1 )
+		{
+			printf("Error getting rom length. Check your path.\n");
+			return -1;
+		}
 
-		rom_buffer = (unsigned char*) malloc( rom_length + 1 );
+		rom.rom_buffer = (unsigned char*) malloc( rom.rom_length + 1 );
 
-		dump_rom_into_buffer( rom_path, rom_buffer, rom_length );
+		dump_rom_into_buffer( &rom );
 
 		if( dump_rom_flag ) 
 		{
-			print_buffer_contents_f( rom_buffer, rom_length );
+			print_buffer_contents_f( &rom, 0 );
 		}
 
 		if( relative_search_text != NULL )
 		{
-			unsigned long location_matches[ MAX_LOCATION_MATCHES ] = { 0 };
+			match_info matches = { 0 };
 
-			int amount_of_matches = relative_search( rom_buffer, rom_length, location_matches, MAX_LOCATION_MATCHES, 
-				relative_search_text, unicode_flag, fuzz_value);
+			if( relative_search( &rom, &matches, relative_search_text, unicode_flag, fuzz_value) == -1 )
+			{
+				printf("Error occured while searching.\n");
+				return -1;
+			}
 
-			print_match_list( rom_buffer, location_matches, amount_of_matches, strlen( relative_search_text ), unicode_flag );
+			print_match_list( &rom, &matches, strlen( relative_search_text ), unicode_flag );
+
+			if( matches.amount_of_matches > 0 )
+			{
+				printf("Attempt to generate a translation file? (if yes, type file name. For no, type nothing):\n");
+				fgets( translate_file_path, MAX_PATH_LENGTH, stdin );
+
+				if( strlen( translate_file_path ) > 0 )
+				{
+					
+				}
+			}
 		}
 
-		free( rom_buffer );
+		free( rom.rom_buffer );
 	}
 
 	return 0;
