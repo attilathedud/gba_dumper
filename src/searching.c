@@ -4,11 +4,11 @@
 
 int relative_search( rom_file *rom, match_info *matches, char* text_to_search, int unicode, int fuzz )
 {
+	//if unicode, assume 2 bytes for each letter, so step ever other byte while searching
+	int step_value 					= unicode ? 2 : 1;
+
 	if( rom == NULL || rom->rom_buffer == NULL || matches == NULL || text_to_search == NULL )
 		return -1;
-
-	//if unicode, assume 2 bytes for each letter, so step ever other byte while searching
-	int step_value = unicode ? 2 : 1;
 
 	for( int i = 0; i < rom->rom_length - strlen( text_to_search ); i++ )
 	{

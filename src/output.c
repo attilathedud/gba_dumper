@@ -1,5 +1,3 @@
-#include <stdio.h>
-
 #include "../include/output.h"
 
 void print_buffer_contents_f( rom_file *rom, unsigned long len_to_display )
@@ -46,5 +44,12 @@ void print_match_list( rom_file *rom, match_info *matches,
 
 		printf("\n");
 	}
+}
 
+void print_buffer_as_bytes( FILE *output_file, unsigned char* buffer, long buffer_length ) 
+{
+	for( int i = 0; i < buffer_length; i++ )
+	{
+		output_file == NULL ? printf( "%.2X", buffer[ i ] ) : fprintf( output_file, "%.2X", buffer[ i ] );
+	}
 }

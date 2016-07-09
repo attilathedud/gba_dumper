@@ -124,7 +124,24 @@ int main( int argc, char** argv )
 
 				if( strlen( translate_file_path ) > 0 )
 				{
-					
+					int translation_return_info = 0;
+
+					if( (translation_return_info = generate_translation_set_from_matches( &rom, translate_file_path, &matches, 
+						relative_search_text, unicode_flag )) < 0 )
+					{
+						if( translation_return_info == -1 )
+						{
+							printf( "Error while generating the translation file.\n");
+							return -1;
+						}
+						else if( translation_return_info == -2 )
+						{
+							printf( "Ambigious data set provided. Make sure character set provided are consistent.\n");
+							return 0;
+						}
+					}
+
+
 				}
 			}
 		}

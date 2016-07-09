@@ -40,3 +40,27 @@ int dump_rom_into_buffer( rom_file *rom )
 
 	return 0;
 }
+
+int create_translation_file( char *filename, byte_to_readable_set *byte_to_readable_translation_set)
+{
+	FILE *translation_file 				= NULL;
+
+	byte_to_readable_set *s 			= NULL;
+
+	if( filename == NULL || byte_to_readable_translation_set == NULL )
+		return -1;
+
+	translation_file = fopen( filename, "w" );
+	if( translation_file == NULL )
+		return -1;
+
+	for( s = byte_to_readable_translation_set; s != NULL; s = s->hh.next ) 
+	{
+        print_buffer_as_bytes( translation_file, s->byte_value, 2 );
+        fprintf( translation_file, ": %c\n", s->readable );
+    }
+
+    fclose( translation_file );
+
+	return 0;
+}
