@@ -23,17 +23,17 @@
 
 int main( int argc, char** argv ) 
 {
-	int cur_arg 					= 0;
-	int dump_rom_flag				= 0;
-	int unicode_flag				= 0;
-	int fuzz_value					= 0;
+	int cur_arg 								= 0;
+	int dump_rom_flag							= 0;
+	int unicode_flag							= 0;
+	int fuzz_value								= 0;
 
-	char *relative_search_text		= NULL;
-	char *temp_end_for_conversion 	= NULL;
+	char *relative_search_text					= NULL;
+	char *temp_end_for_conversion 				= NULL;
 
 	char translate_file_path[ MAX_PATH_LENGTH ] = { 0 };
 
-	rom_file rom = { 0 };
+	rom_file rom 								= { 0 };
 	
 	while( (cur_arg = getopt( argc, argv, "f:r:duz:" ) ) != -1 )
 	{
@@ -122,7 +122,7 @@ int main( int argc, char** argv )
 				printf("Attempt to generate a translation file? (if yes, type file name. For no, type nothing):\n");
 				fgets( translate_file_path, MAX_PATH_LENGTH, stdin );
 
-				if( strlen( translate_file_path ) > 0 )
+				if( strlen( translate_file_path ) > 1 )
 				{
 					int translation_return_info = 0;
 
