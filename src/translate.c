@@ -47,6 +47,10 @@ int generate_translation_set_from_matches( rom_file *rom, char* translate_file_p
 		return -1;
 	}
 
+	//ensure we have data if there is only one match
+	if( matches->amount_of_matches == 1 )
+		memcpy(data1, rom->rom_buffer + matches->location_matches[ 0 ], strlen( relative_search_text ) * step_value + 1 );
+
 	//iterate through our matches, ensuring that the data they point to is consistent.
 	for( int i = 0; i < matches->amount_of_matches - 1; i++ )
 	{
@@ -87,7 +91,7 @@ int generate_translation_set_from_matches( rom_file *rom, char* translate_file_p
 	
 	sort_byte_to_readable( );
 
-	create_translation_file( translate_file_path, get_byte_to_readable_hash( ) );
+	create_translation_file( translate_file_path, get_byte_to_readable_hash( ), unicode );
 
 	delete_byte_to_readable_hash( );
 

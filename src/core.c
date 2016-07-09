@@ -41,7 +41,7 @@ int dump_rom_into_buffer( rom_file *rom )
 	return 0;
 }
 
-int create_translation_file( char *filename, byte_to_readable_set *byte_to_readable_translation_set)
+int create_translation_file( char *filename, byte_to_readable_set *byte_to_readable_translation_set, int unicode )
 {
 	FILE *translation_file 				= NULL;
 
@@ -56,7 +56,7 @@ int create_translation_file( char *filename, byte_to_readable_set *byte_to_reada
 
 	for( s = byte_to_readable_translation_set; s != NULL; s = s->hh.next ) 
 	{
-        print_buffer_as_bytes( translation_file, s->byte_value, 2 );
+        print_buffer_as_bytes( translation_file, s->byte_value, unicode ? 2 : 1 );
         fprintf( translation_file, ": %c\n", s->readable );
     }
 
