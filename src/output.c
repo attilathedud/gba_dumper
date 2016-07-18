@@ -1,22 +1,61 @@
+#include <string.h>
+
 #include "../include/output.h"
 
-void print_buffer_contents_f( rom_file *rom, unsigned long len_to_display )
+void print_buffer_contents_f( rom_file *rom, unsigned long len_to_display, int unicode )
 {
+	char readable 						= 0;
+	unsigned char byte_value[ 2 ]		= { 0 };
+
+	char temp_translated_buffer[ 17 ] 	= { 0 };
+	int cur_translated_buffer_pos		= 0;
+
+	int step_value = unicode ? 2 : 1;
+
+	int is_translating = (get_byte_to_readable_hash() != NULL);
+
 	if( rom == NULL || rom->rom_buffer == NULL )
 		return;
 
 	if( len_to_display == 0 )
 		len_to_display = rom->rom_length;
 
+	printf( "0x00000000 |\t" );
+
 	for ( int i = 0; i < len_to_display; i++ )
 	{
-	     printf( "%.2X", rom->rom_buffer[ i ] );
+		printf( "%.2X", rom->rom_buffer[ i ] );
 
-	     if (i % 4 == 3)
-	         printf(" ");
+		if( is_translating && i % step_value == 0 )
+		{
+			memcpy( byte_value, rom->rom_buffer + i, step_value );
 
-	     if (i % 32 == 31)
-	         printf("\n");
+			if( (readable = find_byte_to_readable_hash_value( byte_value ) ) != 0 )
+			{
+				temp_translated_buffer[ cur_translated_buffer_pos++ ] = readable;
+			}
+			else
+			{
+				temp_translated_buffer[ cur_translated_buffer_pos++ ] = ' ';
+			}
+		}
+
+		if (i % 4 == 3)
+			printf( " " );
+
+		if (i % 32 == 31)
+		{
+			if( is_translating )
+			{
+				printf( "\t| " );
+
+				temp_translated_buffer[ 16 ] = '\0';
+				printf( "%s", temp_translated_buffer );
+				cur_translated_buffer_pos = 0;
+			}
+
+			printf( "\n0x%.8X |\t", i + 1 );
+		}
 	}	
 
 	printf("\n");

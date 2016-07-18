@@ -30,12 +30,12 @@ int main( int argc, char** argv )
 
 	char *relative_search_text					= NULL;
 	char *temp_end_for_conversion 				= NULL;
-
-	char translate_file_path[ MAX_PATH_LENGTH ] = { 0 };
+	char *translation_file_arg					= NULL;
+	char *translate_file_path 					= NULL;
 
 	rom_file rom 								= { 0 };
 	
-	while( (cur_arg = getopt( argc, argv, "f:r:duz:" ) ) != -1 )
+	while( (cur_arg = getopt( argc, argv, "f:r:duz:t:" ) ) != -1 )
 	{
 		switch( cur_arg )
 		{
@@ -50,6 +50,9 @@ int main( int argc, char** argv )
 				break;
 			case 'u':
 				unicode_flag = 1;
+				break;
+			case 't':
+				translation_file_arg = optarg;
 				break;
 			case 'z':
 				errno = 0;
@@ -72,6 +75,10 @@ int main( int argc, char** argv )
 				else if( optopt == 'z' )
 				{
 					fprintf(stderr, "Option %c requires a valid integer to fuzz with.\n", optopt);
+				}
+				else if( optopt == 't' )
+				{
+					fprintf(stderr, "Option %c requires a valid path to a translation file.\n", optopt);
 				}
 				else if( isprint( optopt ) )
 				{
@@ -102,7 +109,10 @@ int main( int argc, char** argv )
 
 		if( dump_rom_flag ) 
 		{
-			print_buffer_contents_f( &rom, 0 );
+			print_buffer_contents_f( &rom, 0, unicode_flag );
+
+			free( rom.rom_buffer );
+			return 0;
 		}
 
 		if( relative_search_text != NULL )
@@ -119,10 +129,16 @@ int main( int argc, char** argv )
 
 			if( matches.amount_of_matches > 0 )
 			{
-				printf("Attempt to generate a translation file? (if yes, type file name. For no, type nothing):\n");
-				fgets( translate_file_path, MAX_PATH_LENGTH, stdin );
+				size_t file_path_len =						 0;
 
-				if( strlen( translate_file_path ) > 1 )
+				printf("Attempt to generate a translation file? (if yes, type file name. For no, type nothing):\n");
+				getline( &translate_file_path, &file_path_len, stdin );
+
+				//strip newline characters from input name
+				//see https://stackoverflow.com/questions/2693776/removing-trailing-newline-character-from-fgets-input/28462221#28462221
+				translate_file_path[ strcspn( translate_file_path, "\r\n" ) ] = 0;
+
+				if( strlen( translate_file_path ) > 0 )
 				{
 					int translation_return_info = 0;
 
@@ -140,13 +156,27 @@ int main( int argc, char** argv )
 							return 0;
 						}
 					}
-
-
 				}
+
+				free( translate_file_path );
 			}
+
+			free( rom.rom_buffer );
+			return 0;
 		}
 
-		free( rom.rom_buffer );
+		if( translation_file_arg != NULL )
+		{
+			if( -1 == read_translation_file( translation_file_arg, unicode_flag ) )
+			{
+				printf( "Error while reading the translation file.\n" );
+			}
+
+			create_translated_rom( &rom, unicode_flag );
+
+			free( rom.rom_buffer );
+			return 0;
+		}		
 	}
 
 	return 0;

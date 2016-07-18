@@ -91,7 +91,7 @@ int generate_translation_set_from_matches( rom_file *rom, char* translate_file_p
 	
 	sort_byte_to_readable( );
 
-	int successful_write_flag = create_translation_file( translate_file_path, get_byte_to_readable_hash( ), unicode );
+	int successful_write_flag = create_translation_file( translate_file_path, unicode );
 
 	delete_byte_to_readable_hash( );
 

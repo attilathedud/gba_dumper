@@ -16,6 +16,17 @@ void add_byte_to_readable_hash( unsigned char* byte_value, char readable )
 	}
 }
 
+char find_byte_to_readable_hash_value( unsigned char* byte_value )
+{
+	byte_to_readable_set *s = NULL;
+
+	HASH_FIND_STR( byte_to_readable_translation_set, byte_value, s );
+	if( s == NULL )
+		return 0;
+
+	return s->readable;
+}
+
 unsigned int get_byte_to_readable_hash_count()
 {
 	return HASH_COUNT( byte_to_readable_translation_set );

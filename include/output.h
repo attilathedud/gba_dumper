@@ -10,6 +10,11 @@
 	#include "searching.h"
 #endif
 
-void print_buffer_contents_f( rom_file*, unsigned long );
+#ifndef HASHING_H
+#define HASHING_H
+	#include "hashing.h"
+#endif
+
+void print_buffer_contents_f( rom_file*, unsigned long, int );
 void print_match_list( rom_file*, match_info*, int, int );
 void print_buffer_as_bytes( FILE*, unsigned char*, long );
