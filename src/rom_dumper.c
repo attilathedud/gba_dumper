@@ -1,11 +1,3 @@
-#include <stdio.h>
-#include <ctype.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include <string.h>
-#include <errno.h>
-#include <limits.h>
-
 #ifndef COMMON_H
 #define COMMON_H
 	#include "../include/common.h"
@@ -18,82 +10,17 @@
 	#include "../include/searching.h"
 #endif
 
+#include "../include/input.h"
 #include "../include/output.h"
 #include "../include/translate.h"
 
 int main( int argc, char** argv ) 
 {
-	int cur_arg 								= 0;
-	int dump_rom_flag							= 0;
-	int unicode_flag							= 0;
-	int fuzz_value								= 0;
-
-	char *relative_search_text					= NULL;
-	char *temp_end_for_conversion 				= NULL;
-	char *translation_file_arg					= NULL;
-	char *translate_file_path 					= NULL;
-
 	rom_file rom 								= { 0 };
-	
-	while( (cur_arg = getopt( argc, argv, "f:r:duz:t:" ) ) != -1 )
-	{
-		switch( cur_arg )
-		{
-			case 'f':
-				rom.rom_path = optarg;
-				break;
-			case 'r':
-				relative_search_text = optarg;
-				break;
-			case 'd':
-				dump_rom_flag = 1;
-				break;
-			case 'u':
-				unicode_flag = 1;
-				break;
-			case 't':
-				translation_file_arg = optarg;
-				break;
-			case 'z':
-				errno = 0;
+	passed_options options 						= { 0 };
 
-				long temp_value = strtol( optarg, &temp_end_for_conversion, 10);
-				if( temp_end_for_conversion != optarg && errno != ERANGE && (temp_value >= INT_MIN || temp_value <= INT_MAX))
-				{
-					fuzz_value = (int)temp_value;
-				}
-				break;
-			case '?':
-				if( optopt == 'f' )
-				{
-					fprintf( stderr, "Option %c requires a valid path to a rom.\n", optopt );
-				}
-				else if( optopt == 'r' )
-				{
-					fprintf(stderr, "Option %c requires a valid string to search.\n", optopt);
-				}
-				else if( optopt == 'z' )
-				{
-					fprintf(stderr, "Option %c requires a valid integer to fuzz with.\n", optopt);
-				}
-				else if( optopt == 't' )
-				{
-					fprintf(stderr, "Option %c requires a valid path to a translation file.\n", optopt);
-				}
-				else if( isprint( optopt ) )
-				{
-					fprintf(stderr, "Unknown option '-%c'.\n", optopt);
-				}
-				else
-				{
-					fprintf(stderr, "Unknown option character '%x'.\n", optopt);
-				}
-
-				return 1;
-			default:
-				abort();
-		}
-	}
+	if( 1 == handle_input( &rom, &options, argc, argv ) )
+		return 1;
 
 	if( rom.rom_path != NULL )
 	{
@@ -107,29 +34,31 @@ int main( int argc, char** argv )
 
 		dump_rom_into_buffer( &rom );
 
-		if( dump_rom_flag ) 
+		if( options.dump_rom_flag ) 
 		{
-			print_buffer_contents_f( &rom, 0, unicode_flag );
+			print_buffer_contents_f( &rom, 0, options.unicode_flag );
 
 			free( rom.rom_buffer );
 			return 0;
 		}
 
-		if( relative_search_text != NULL )
+		if( options.relative_search_text != NULL )
 		{
 			match_info matches = { 0 };
 
-			if( relative_search( &rom, &matches, relative_search_text, unicode_flag, fuzz_value) == -1 )
+			if( relative_search( &rom, &matches, options.relative_search_text, options.unicode_flag, options.fuzz_value) == -1 )
 			{
 				printf("Error occured while searching.\n");
 				return -1;
 			}
 
-			print_match_list( &rom, &matches, strlen( relative_search_text ), unicode_flag );
+			print_match_list( &rom, &matches, strlen( options.relative_search_text ), options.unicode_flag );
 
 			if( matches.amount_of_matches > 0 )
 			{
 				size_t file_path_len =						 0;
+
+				char *translate_file_path;
 
 				printf("Attempt to generate a translation file? (if yes, type file name. For no, type nothing):\n");
 				getline( &translate_file_path, &file_path_len, stdin );
@@ -143,7 +72,7 @@ int main( int argc, char** argv )
 					int translation_return_info = 0;
 
 					if( (translation_return_info = generate_translation_set_from_matches( &rom, translate_file_path, &matches, 
-						relative_search_text, unicode_flag )) < 0 )
+						options.relative_search_text, options.unicode_flag )) < 0 )
 					{
 						if( translation_return_info == -1 )
 						{
@@ -165,14 +94,14 @@ int main( int argc, char** argv )
 			return 0;
 		}
 
-		if( translation_file_arg != NULL )
+		if( options.translation_file_arg != NULL )
 		{
-			if( -1 == read_translation_file( translation_file_arg, unicode_flag ) )
+			if( -1 == read_translation_file( options.translation_file_arg, options.unicode_flag ) )
 			{
 				printf( "Error while reading the translation file.\n" );
 			}
 
-			create_translated_rom( &rom, unicode_flag );
+			create_translated_rom( &rom, options.unicode_flag );
 
 			free( rom.rom_buffer );
 			return 0;
