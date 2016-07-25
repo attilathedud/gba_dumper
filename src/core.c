@@ -2,6 +2,13 @@
 #include <stdlib.h>
 
 #include "../include/core.h"
+#include "../include/utils/utils.h"
+
+/*
+* TODO: 
+* 	Move all output to output file
+* 	Remove magic numbers
+*/
 
 unsigned long get_rom_length( rom_file *rom )
 {
@@ -65,30 +72,6 @@ int create_translation_file( char *filename, int unicode )
 	return 0;
 }
 
-//a modified form of the answer provided here: 
-//https://stackoverflow.com/questions/3408706/hexadecimal-string-to-byte-array-in-c/21510910#21510910
-int byte_literal_to_hex_value( unsigned char *byte_hex, unsigned char *byte_literal, int byte_literal_len )
-{
-	unsigned char *cur_position_in_byte_literal = byte_literal;
-	char temp_hex_buffer[ 5 ] = { '0', 'x', 0, 0, 0 };
-
-	char *end_of_literal;
-
-	if( byte_literal[ 0 ] == '\0' || strlen( byte_literal ) % 2 )
-		return -1;
-
-	for( int i = 0; i < byte_literal_len; i++ )
-	{
-		temp_hex_buffer[ 2 ] = cur_position_in_byte_literal[ 0 ];
-		temp_hex_buffer[ 3 ] = cur_position_in_byte_literal[ 1 ];
-
-		byte_hex[ i ] = strtol( temp_hex_buffer, &end_of_literal, 0 );
-		cur_position_in_byte_literal += 2 * sizeof( char );
-	}
-
-	return 0;
-}
-
 int read_translation_file( char *filename, int unicode )
 {
 	FILE *translation_file 				= NULL;
@@ -144,3 +127,75 @@ int create_translated_rom( rom_file *rom, int unicode )
 	return 0;
 }
 
+int get_dump_amount_of_lines( dump_file *dump )
+{
+	FILE *dump_file 					= NULL;
+
+	if( dump == NULL || dump->dump_path == NULL )
+		return -1;
+
+	dump_file = fopen( dump->dump_path, "r" );
+	if( dump_file == NULL )
+		return -1;
+
+	char *cur_line						= NULL;
+	size_t cur_len 						= 0;
+
+	unsigned long amount_of_lines		= 0;
+
+	while( getline( &cur_line, &cur_len, dump_file ) != -1 )
+	{
+		amount_of_lines++;
+	}
+
+	free( cur_line );
+
+	fclose( dump_file );
+
+	dump->rom_length 			= amount_of_lines * 32;
+	dump->translated_length 	= amount_of_lines * 16;
+
+	return 0;
+}
+
+int read_dump_file( dump_file *dump )
+{
+	FILE *dump_file 						= NULL;
+
+	if( dump == NULL || dump->dump_path == NULL || dump->rom_buffer == NULL || dump->translated_buffer == NULL )
+		return -1;	
+
+	dump_file = fopen( dump->dump_path, "r" );
+	if( dump_file == NULL )
+		return -1;
+
+	char *cur_line							= NULL;
+	size_t cur_len 							= 0;
+
+	unsigned char address[ 11 ]				= { 0 };
+
+	unsigned char byte_literal[ 72 ] 		= { 0 };
+	unsigned char byte_hex[ 32 ] 			= { 0 };
+
+	unsigned char translated_literal[ 17 ] 	= { 0 };
+
+	unsigned long cur_rom_buffer_pos		= 0;
+
+	while( getline( &cur_line, &cur_len, dump_file ) != -1 )
+	{
+		sscanf( cur_line, "%s |\t%71c \t| %16c", address, byte_literal, translated_literal );
+
+		remove_spaces_from_string( byte_literal );
+
+		byte_literal_to_hex_value( byte_hex, byte_literal, 64 );
+		memcpy( dump->rom_buffer + cur_rom_buffer_pos, byte_hex, 32 );
+		memcpy( dump->translated_buffer + (cur_rom_buffer_pos / 2 ), translated_literal, 16 );
+		cur_rom_buffer_pos += 32;
+	}
+
+	free( cur_line );
+
+	fclose( dump_file );
+
+	return 0;
+}

@@ -14,12 +14,20 @@
 #include "../include/output.h"
 #include "../include/translate.h"
 
+/*
+* TODO: 
+* Fix up program flow (returns induce memory leaks)
+* Ensure all error is written to stderr
+*/
+
 int main( int argc, char** argv ) 
 {
 	rom_file rom 								= { 0 };
 	passed_options options 						= { 0 };
 
-	if( 1 == handle_input( &rom, &options, argc, argv ) )
+	dump_file dump 								= { 0 };
+
+	if( 1 == handle_input( &rom, &dump, &options, argc, argv ) )
 		return 1;
 
 	if( rom.rom_path != NULL )
@@ -107,6 +115,29 @@ int main( int argc, char** argv )
 			return 0;
 		}		
 	}
+	else if( dump.dump_path != NULL && options.write_file_path != NULL )
+	{
+		/*if( -1 == read_translation_file( options.translation_file_arg, options.unicode_flag ) )
+		{
+			printf( "Error while reading the translation file.\n" );
+		}*/
+
+		if( get_dump_amount_of_lines( &dump ) == -1 )
+		{
+			printf( "Error while parsing the dump file.\n" );
+		}
+
+		dump.rom_buffer 				= (unsigned char*) malloc( dump.rom_length );
+		dump.translated_buffer 			= (unsigned char*) malloc( dump.translated_length );
+
+		read_dump_file( &dump );
+
+		
+
+		free( dump.rom_buffer );
+		free( dump.translated_buffer );
+	}
+
 
 	return 0;
 }

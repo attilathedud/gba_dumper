@@ -8,16 +8,16 @@
 
 #include "../include/input.h"
 
-int handle_input( rom_file* rom, passed_options* options, int argc, char** argv )
+int handle_input( rom_file *rom, dump_file *dump, passed_options* options, int argc, char** argv )
 {
 	int cur_arg 								= 0;
 
 	char *temp_end_for_conversion;
 
-	if( rom == NULL || options == NULL )
+	if( rom == NULL || options == NULL || dump == NULL )
 		return 1;
 
-	while( (cur_arg = getopt( argc, argv, "f:r:duz:t:" ) ) != -1 )
+	while( (cur_arg = getopt( argc, argv, "f:r:duz:t:o:w:" ) ) != -1 )
 	{
 		switch( cur_arg )
 		{
@@ -36,6 +36,12 @@ int handle_input( rom_file* rom, passed_options* options, int argc, char** argv 
 			case 't':
 				options->translation_file_arg = optarg;
 				break;
+			case 'o':
+				options->write_file_path = optarg;
+				break;
+			case 'w':
+				dump->dump_path = optarg;
+				break;
 			case 'z':
 				errno = 0;
 
@@ -46,29 +52,37 @@ int handle_input( rom_file* rom, passed_options* options, int argc, char** argv 
 				}
 				break;
 			case '?':
-				if( optopt == 'f' )
+				switch( optopt )
 				{
-					fprintf( stderr, "Option %c requires a valid path to a rom.\n", optopt );
-				}
-				else if( optopt == 'r' )
-				{
-					fprintf(stderr, "Option %c requires a valid string to search.\n", optopt);
-				}
-				else if( optopt == 'z' )
-				{
-					fprintf(stderr, "Option %c requires a valid integer to fuzz with.\n", optopt);
-				}
-				else if( optopt == 't' )
-				{
-					fprintf(stderr, "Option %c requires a valid path to a translation file.\n", optopt);
-				}
-				else if( isprint( optopt ) )
-				{
-					fprintf(stderr, "Unknown option '-%c'.\n", optopt);
-				}
-				else
-				{
-					fprintf(stderr, "Unknown option character '%x'.\n", optopt);
+					case 'f':
+						fprintf( stderr, "Option %c requires a valid path to a rom.\n", optopt );
+						break;
+					case 'r':
+						fprintf(stderr, "Option %c requires a valid string to search.\n", optopt);
+						break;
+					case 'z':
+						fprintf(stderr, "Option %c requires a valid integer to fuzz with.\n", optopt);
+						break;
+					case 't':
+						fprintf(stderr, "Option %c requires a valid path to a translation file.\n", optopt);
+						break;
+					case 'o':
+						fprintf(stderr, "Option %c requires a valid path to an output file.\n", optopt);
+						break;
+					case 'w':
+						fprintf(stderr, "Option %c requires a valid path to a dump file.\n", optopt);
+						break;
+					default:
+						if ( isprint( optopt ) )
+						{
+							fprintf(stderr, "Unknown option '-%c'.\n", optopt);
+						}
+						else
+						{
+							fprintf(stderr, "Unknown option character '%x'.\n", optopt);
+						}
+						
+						break;
 				}
 
 				return 1;

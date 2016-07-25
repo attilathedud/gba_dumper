@@ -54,7 +54,8 @@ void print_buffer_contents_f( rom_file *rom, unsigned long len_to_display, int u
 				cur_translated_buffer_pos = 0;
 			}
 
-			printf( "\n0x%.8X |\t", i + 1 );
+			if( i + 1 < len_to_display )
+				printf( "\n0x%.8X |\t", i + 1 );
 		}
 	}	
 
