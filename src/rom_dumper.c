@@ -115,12 +115,12 @@ int main( int argc, char** argv )
 			return 0;
 		}		
 	}
-	else if( dump.dump_path != NULL && options.write_file_path != NULL )
+	else if( dump.dump_path != NULL && options.write_file_path != NULL && options.translation_file_arg != NULL )
 	{
-		/*if( -1 == read_translation_file( options.translation_file_arg, options.unicode_flag ) )
+		if( -1 == read_translation_file( options.translation_file_arg, options.unicode_flag ) )
 		{
 			printf( "Error while reading the translation file.\n" );
-		}*/
+		}
 
 		if( get_dump_amount_of_lines( &dump ) == -1 )
 		{
@@ -132,7 +132,7 @@ int main( int argc, char** argv )
 
 		read_dump_file( &dump );
 
-		
+		write_translated_dump( &dump, options.write_file_path, options.unicode_flag );
 
 		free( dump.rom_buffer );
 		free( dump.translated_buffer );
