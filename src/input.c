@@ -17,7 +17,7 @@ int handle_input( rom_file *rom, dump_file *dump, passed_options* options, int a
 	if( rom == NULL || options == NULL || dump == NULL )
 		return 1;
 
-	while( (cur_arg = getopt( argc, argv, "f:r:duz:t:o:w:" ) ) != -1 )
+	while( (cur_arg = getopt( argc, argv, "f:r:duz:t:m:o:" ) ) != -1 )
 	{
 		switch( cur_arg )
 		{
@@ -36,10 +36,10 @@ int handle_input( rom_file *rom, dump_file *dump, passed_options* options, int a
 			case 't':
 				options->translation_file_arg = optarg;
 				break;
-			case 'o':
+			case 'm':
 				options->write_file_path = optarg;
 				break;
-			case 'w':
+			case 'o':
 				dump->dump_path = optarg;
 				break;
 			case 'z':
