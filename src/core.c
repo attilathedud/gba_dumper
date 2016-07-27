@@ -211,6 +211,8 @@ int write_translated_dump( dump_file *dump, char* write_file_path, int unicode )
 	char readable 						= 0;
 	unsigned char byte_value[ 2 ]		= { 0 };
 
+	unsigned char new_byte_value[ 2 ]	= { 0 };
+
 	int step_value = unicode ? 2 : 1;
 
 	if( dump == NULL || get_byte_to_readable_hash() == NULL )
@@ -222,7 +224,6 @@ int write_translated_dump( dump_file *dump, char* write_file_path, int unicode )
 
 	for( int i = 0; i < dump->rom_length; i++ )
 	{
-		//translated[ i / 2 ] != byte_to_char hash
 		if( i % step_value == 0 )
 		{
 			memcpy( byte_value, dump->rom_buffer + i, step_value );
@@ -231,7 +232,11 @@ int write_translated_dump( dump_file *dump, char* write_file_path, int unicode )
 			{
 				if( dump->translated_buffer[ i / 2 ] != readable )
 				{
-					
+					if( 1 == find_readable_to_byte_hash_value( dump->translated_buffer[ i / 2 ], new_byte_value ) )
+					{
+						memcpy( dump->rom_buffer + i, new_byte_value, step_value );
+						i++;
+					}
 				}
 			}
 		}

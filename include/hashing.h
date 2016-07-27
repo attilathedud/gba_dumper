@@ -10,6 +10,7 @@ typedef struct {
 
 unsigned int get_byte_to_readable_hash_count( );
 char find_byte_to_readable_hash_value( unsigned char* );
+int find_readable_to_byte_hash_value( char, unsigned char* );
 void sort_byte_to_readable( );
 void add_byte_to_readable_hash( unsigned char*, char );
 void delete_byte_to_readable_hash( );
