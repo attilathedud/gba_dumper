@@ -36,10 +36,10 @@ int handle_input( rom_file *rom, dump_file *dump, passed_options* options, int a
 			case 't':
 				options->translation_file_arg = optarg;
 				break;
-			case 'm':
+			case 'o':
 				options->write_file_path = optarg;
 				break;
-			case 'o':
+			case 'm':
 				dump->dump_path = optarg;
 				break;
 			case 'z':
