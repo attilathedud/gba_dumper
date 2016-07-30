@@ -1,3 +1,6 @@
+#include <errno.h>
+#include <limits.h>
+
 #ifndef COMMON_H
 #define COMMON_H
 	#include "../include/common.h"
@@ -105,15 +108,40 @@ int main( int argc, char** argv )
 						{
 							fprintf( stderr, "Error while generating the translation file.\n" );
 
+							free( translate_file_path );
 							cleanup( &rom, &dump );
 							return -1;
 						}
 						else if( translation_return_info == -2 )
 						{
-							fprintf( stderr, "Ambigious data set provided. Make sure character set provided are consistent.\n" );
+							printf( "Ambigious data set provided. Please select a data set to use: \n" );
 
-							cleanup( &rom, &dump );
-							return -1;
+							size_t match_number_length			= 0;
+
+							char *match_number_selected;
+							char *temp_end_for_conversion;
+							errno = 0;
+
+							int match_set_to_use				= 0;
+
+							getline( &match_number_selected, &match_number_length, stdin );
+
+							long temp_value = strtol( match_number_selected, &temp_end_for_conversion, 10);
+							if( temp_end_for_conversion != match_number_selected && errno != ERANGE && 
+								(temp_value >= INT_MIN || temp_value <= INT_MAX))
+							{
+								match_set_to_use = ( int ) temp_value;
+							}
+
+							if( match_set_to_use > 0 )
+							{
+								matches.location_matches[ 0 ] = matches.location_matches[ match_set_to_use - 1 ];
+								matches.amount_of_matches = 1;
+							}
+
+							generate_translation_set_from_matches( &rom, translate_file_path, &matches, options.relative_search_text );
+
+							free( match_number_selected );
 						}
 					}
 				}

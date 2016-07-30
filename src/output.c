@@ -73,7 +73,7 @@ void print_match_list( rom_file *rom, match_info *matches, int relative_search_t
 
 	for( int i = 0; i < matches->amount_of_matches; i++ )
 	{
-		printf("0x%.8lX\t", matches->location_matches[ i ]);
+		printf("%d: 0x%.8lX\t", i + 1, matches->location_matches[ i ]);
 		for( int c = 0; c < relative_search_text_length * 2; c++ )
 		{
 			printf("%.2X", rom->rom_buffer[ matches->location_matches[ i ] + c ]);
