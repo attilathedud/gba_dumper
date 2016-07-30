@@ -20,6 +20,4 @@ int create_translation_file( char*, int );
 int read_translation_file( char*, int );
 int create_translated_rom( rom_file*, int );
 
-int get_dump_amount_of_lines( dump_file* );
-int read_dump_file( dump_file* );
-int write_translated_dump( dump_file*, char*, int );
+

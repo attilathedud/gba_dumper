@@ -10,7 +10,7 @@
 
 #ifndef CORE_H
 #define CORE_H
-	#include "core.h"
+	#include "rom_core.h"
 #endif
 
 #ifndef HASHING_H

@@ -3,7 +3,8 @@
 	#include "../include/common.h"
 #endif
 
-#include "../include/core.h"
+#include "../include/rom_core.h"
+#include "../include/dump_core.h"
 
 #ifndef SEARCHING_H
 #define SEARCHING_H
