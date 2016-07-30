@@ -6,7 +6,6 @@
 
 /*
 * TODO: 
-* 	Move all output to output file
 * 	Remove magic numbers
 *	Fix crash while translating ascii rom
 */
@@ -65,7 +64,7 @@ int create_translation_file( char *filename, int unicode )
 	for( s = get_byte_to_readable_hash(); s != NULL; s = s->hh.next ) 
 	{
         print_buffer_as_bytes( translation_file, s->byte_value, unicode ? 2 : 1 );
-        fprintf( translation_file, " : %c\n", s->readable );
+        print_character_translation( translation_file, s->readable);
     }
 
     fclose( translation_file );

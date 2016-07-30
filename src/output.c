@@ -93,3 +93,8 @@ void print_buffer_as_bytes( FILE *output_file, unsigned char* buffer, long buffe
 		output_file == NULL ? printf( "%.2X", buffer[ i ] ) : fprintf( output_file, "%.2X", buffer[ i ] );
 	}
 }
+
+void print_character_translation( FILE *output_file, char readable )
+{
+	output_file == NULL ? printf( " : %c\n", readable ) : fprintf( output_file, " : %c\n", readable );
+}

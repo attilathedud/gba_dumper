@@ -19,5 +19,8 @@ roms/*
 # The main executable
 rom_dumper*
 
-# Ignore translation files
+# Ignore debug translation files
 *.tra
+
+# Ignore debug dump files
+*.dmp
