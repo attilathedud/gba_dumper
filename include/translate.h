@@ -18,4 +18,4 @@
 	#include "hashing.h"
 #endif
 
-int generate_translation_set_from_matches( rom_file*, char*, match_info*, char*, int );
+int generate_translation_set_from_matches( rom_file*, char*, match_info*, char* );

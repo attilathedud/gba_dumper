@@ -17,7 +17,7 @@ int handle_input( rom_file *rom, dump_file *dump, passed_options* options, int a
 	if( rom == NULL || options == NULL || dump == NULL )
 		return 1;
 
-	while( (cur_arg = getopt( argc, argv, "f:r:duz:t:m:o:" ) ) != -1 )
+	while( (cur_arg = getopt( argc, argv, "f:r:dz:t:m:o:" ) ) != -1 )
 	{
 		switch( cur_arg )
 		{
@@ -29,9 +29,6 @@ int handle_input( rom_file *rom, dump_file *dump, passed_options* options, int a
 				break;
 			case 'd':
 				options->dump_rom_flag = 1;
-				break;
-			case 'u':
-				options->unicode_flag = 1;
 				break;
 			case 't':
 				options->translation_file_arg = optarg;

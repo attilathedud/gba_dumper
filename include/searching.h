@@ -10,4 +10,4 @@ typedef struct {
 	unsigned long location_matches[ MAX_LOCATION_MATCHES ];
 } match_info;
 
-int relative_search( rom_file*, match_info*, char*, int, int );
+int relative_search( rom_file*, match_info*, char*, int );

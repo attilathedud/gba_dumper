@@ -48,7 +48,7 @@ int dump_rom_into_buffer( rom_file *rom )
 	return 0;
 }
 
-int create_translation_file( char *filename, int unicode )
+int create_translation_file( char *filename )
 {
 	FILE *translation_file 				= NULL;
 
@@ -63,7 +63,7 @@ int create_translation_file( char *filename, int unicode )
 
 	for( s = get_byte_to_readable_hash(); s != NULL; s = s->hh.next ) 
 	{
-        print_buffer_as_bytes( translation_file, s->byte_value, unicode ? 2 : 1 );
+        print_buffer_as_bytes( translation_file, s->byte_value, 2 );
         print_character_translation( translation_file, s->readable);
     }
 
@@ -72,7 +72,7 @@ int create_translation_file( char *filename, int unicode )
 	return 0;
 }
 
-int read_translation_file( char *filename, int unicode )
+int read_translation_file( char *filename )
 {
 	FILE *translation_file 				= NULL;
 
@@ -82,8 +82,6 @@ int read_translation_file( char *filename, int unicode )
 	unsigned char byte_hex[ 2 ]			= { 0 };
 	unsigned char byte_literal[ 4 ]		= { 0 };
 	char readable 						=  0;
-
-	int step_value						= unicode ? 2 : 1;
 
 	if( filename == NULL )
 		return -1;
@@ -96,7 +94,7 @@ int read_translation_file( char *filename, int unicode )
 	{
 		sscanf( cur_line, "%s : %c", byte_literal, &readable );
 
-		if( -1 == byte_literal_to_hex_value( byte_hex, byte_literal, step_value * 2 ) )
+		if( -1 == byte_literal_to_hex_value( byte_hex, byte_literal, 2 * 2 ) )
 		{
 			delete_byte_to_readable_hash( );
 			return -1;
@@ -115,12 +113,12 @@ int read_translation_file( char *filename, int unicode )
 	return 0;
 }
 
-int create_translated_rom( rom_file *rom, int unicode )
+int create_translated_rom( rom_file *rom )
 {
 	if( rom == NULL || get_byte_to_readable_hash() == NULL )
 		return -1;
 
-	print_buffer_contents_f( rom, rom->rom_length, unicode );
+	print_buffer_contents_f( rom, rom->rom_length );
 
 	delete_byte_to_readable_hash( );
 

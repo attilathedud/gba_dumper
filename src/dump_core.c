@@ -80,7 +80,7 @@ int read_dump_file( dump_file *dump )
 	return 0;
 }
 
-int write_translated_dump( dump_file *dump, char* write_file_path, int unicode )
+int write_translated_dump( dump_file *dump, char* write_file_path )
 {
 	FILE *write_file 							= NULL;
 
@@ -88,8 +88,6 @@ int write_translated_dump( dump_file *dump, char* write_file_path, int unicode )
 	unsigned char byte_value[ 2 ]		= { 0 };
 
 	unsigned char new_byte_value[ 2 ]	= { 0 };
-
-	int step_value = unicode ? 2 : 1;
 
 	if( dump == NULL || get_byte_to_readable_hash() == NULL )
 		return -1;
@@ -100,9 +98,9 @@ int write_translated_dump( dump_file *dump, char* write_file_path, int unicode )
 
 	for( int i = 0; i < dump->rom_length; i++ )
 	{
-		if( i % step_value == 0 )
+		if( i % 2 == 0 )
 		{
-			memcpy( byte_value, dump->rom_buffer + i, step_value );
+			memcpy( byte_value, dump->rom_buffer + i, 2 );
 
 			if( (readable = find_byte_to_readable_hash_value( byte_value ) ) != 0 )
 			{
@@ -110,7 +108,7 @@ int write_translated_dump( dump_file *dump, char* write_file_path, int unicode )
 				{
 					if( 1 == find_readable_to_byte_hash_value( dump->translated_buffer[ i / 2 ], new_byte_value ) )
 					{
-						memcpy( dump->rom_buffer + i, new_byte_value, step_value );
+						memcpy( dump->rom_buffer + i, new_byte_value, 2 );
 						i++;
 					}
 				}

@@ -61,7 +61,7 @@ int main( int argc, char** argv )
 
 		if( options.dump_rom_flag ) 
 		{
-			print_buffer_contents_f( &rom, 0, options.unicode_flag );
+			print_buffer_contents_f( &rom, 0 );
 
 			cleanup( &rom, &dump );
 			return 0;
@@ -71,7 +71,7 @@ int main( int argc, char** argv )
 		{
 			match_info matches = { 0 };
 
-			if( -1 == relative_search( &rom, &matches, options.relative_search_text, options.unicode_flag, options.fuzz_value) )
+			if( -1 == relative_search( &rom, &matches, options.relative_search_text, options.fuzz_value) )
 			{
 				fprintf( stderr, "Error occured while searching.\n" );
 
@@ -79,7 +79,7 @@ int main( int argc, char** argv )
 				return -1;
 			}
 
-			print_match_list( &rom, &matches, strlen( options.relative_search_text ), options.unicode_flag );
+			print_match_list( &rom, &matches, strlen( options.relative_search_text ) );
 
 			if( matches.amount_of_matches > 0 )
 			{
@@ -99,7 +99,7 @@ int main( int argc, char** argv )
 					int translation_return_info = 0;
 
 					if( (translation_return_info = generate_translation_set_from_matches( &rom, translate_file_path, &matches, 
-						options.relative_search_text, options.unicode_flag )) < 0 )
+						options.relative_search_text )) < 0 )
 					{
 						if( translation_return_info == -1 )
 						{
@@ -127,7 +127,7 @@ int main( int argc, char** argv )
 
 		if( options.translation_file_arg != NULL )
 		{
-			if( -1 == read_translation_file( options.translation_file_arg, options.unicode_flag ) )
+			if( -1 == read_translation_file( options.translation_file_arg ) )
 			{
 				fprintf( stderr, "Error while reading the translation file.\n" );
 
@@ -135,7 +135,7 @@ int main( int argc, char** argv )
 				return -1;
 			}
 
-			if( -1 == create_translated_rom( &rom, options.unicode_flag ) )
+			if( -1 == create_translated_rom( &rom ) )
 			{
 				fprintf( stderr, "Error while creating the translated rom.\n" );
 
@@ -149,7 +149,7 @@ int main( int argc, char** argv )
 	}
 	else if( dump.dump_path != NULL && options.write_file_path != NULL && options.translation_file_arg != NULL )
 	{
-		if( -1 == read_translation_file( options.translation_file_arg, options.unicode_flag ) )
+		if( -1 == read_translation_file( options.translation_file_arg ) )
 		{
 			fprintf( stderr, "Error while reading the translation file.\n" );
 
@@ -176,7 +176,7 @@ int main( int argc, char** argv )
 			return -1;
 		}
 
-		if( -1 == write_translated_dump( &dump, options.write_file_path, options.unicode_flag ) )
+		if( -1 == write_translated_dump( &dump, options.write_file_path ) )
 		{
 			fprintf( stderr, "Error while writing the new rom.\n" );
 

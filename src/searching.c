@@ -2,11 +2,8 @@
 
 #include "../include/searching.h"
 
-int relative_search( rom_file *rom, match_info *matches, char* text_to_search, int unicode, int fuzz )
+int relative_search( rom_file *rom, match_info *matches, char* text_to_search, int fuzz )
 {
-	//if unicode, assume 2 bytes for each letter, so step ever other byte while searching
-	int step_value 					= unicode ? 2 : 1;
-
 	if( rom == NULL || rom->rom_buffer == NULL || matches == NULL || text_to_search == NULL )
 		return -1;
 
@@ -19,8 +16,8 @@ int relative_search( rom_file *rom, match_info *matches, char* text_to_search, i
 
 		for( int c = 0; c < strlen( text_to_search) - 1; c++ )
 		{
-			if( rom->rom_buffer[ i + (c * step_value)] + ( text_to_search[c + 1] - text_to_search[ c ] ) == 
-					rom->rom_buffer[ i + (c * step_value) + step_value] )
+			if( rom->rom_buffer[ i + (c * 2)] + ( text_to_search[c + 1] - text_to_search[ c ] ) == 
+					rom->rom_buffer[ i + (c * 2) + 2] )
 			{
 				match_score++;
 			}

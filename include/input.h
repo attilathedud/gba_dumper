@@ -5,7 +5,6 @@
 
 typedef struct {
 	int dump_rom_flag;
-	int unicode_flag;
 	int fuzz_value;
 
 	char *relative_search_text;

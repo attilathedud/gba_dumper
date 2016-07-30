@@ -2,15 +2,13 @@
 
 #include "../include/output.h"
 
-void print_buffer_contents_f( rom_file *rom, unsigned long len_to_display, int unicode )
+void print_buffer_contents_f( rom_file *rom, unsigned long len_to_display )
 {
 	char readable 						= 0;
 	unsigned char byte_value[ 2 ]		= { 0 };
 
 	char temp_translated_buffer[ 17 ] 	= { 0 };
 	int cur_translated_buffer_pos		= 0;
-
-	int step_value = unicode ? 2 : 1;
 
 	int is_translating = (get_byte_to_readable_hash() != NULL);
 
@@ -26,9 +24,9 @@ void print_buffer_contents_f( rom_file *rom, unsigned long len_to_display, int u
 	{
 		printf( "%.2X", rom->rom_buffer[ i ] );
 
-		if( is_translating && i % step_value == 0 )
+		if( is_translating && i % 2 == 0 )
 		{
-			memcpy( byte_value, rom->rom_buffer + i, step_value );
+			memcpy( byte_value, rom->rom_buffer + i, 2 );
 
 			if( (readable = find_byte_to_readable_hash_value( byte_value ) ) != 0 )
 			{
@@ -62,8 +60,7 @@ void print_buffer_contents_f( rom_file *rom, unsigned long len_to_display, int u
 	printf("\n");
 }
 
-void print_match_list( rom_file *rom, match_info *matches, 
-	int relative_search_text_length, int unicode_flag) 
+void print_match_list( rom_file *rom, match_info *matches, int relative_search_text_length ) 
 {
 	if( rom == NULL || rom->rom_buffer == NULL || matches == NULL )
 		return;
@@ -77,7 +74,7 @@ void print_match_list( rom_file *rom, match_info *matches,
 	for( int i = 0; i < matches->amount_of_matches; i++ )
 	{
 		printf("0x%.8lX\t", matches->location_matches[ i ]);
-		for( int c = 0; c < relative_search_text_length * (unicode_flag ? 2 : 1); c++ )
+		for( int c = 0; c < relative_search_text_length * 2; c++ )
 		{
 			printf("%.2X", rom->rom_buffer[ matches->location_matches[ i ] + c ]);
 		}
