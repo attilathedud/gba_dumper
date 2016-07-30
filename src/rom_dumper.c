@@ -14,11 +14,26 @@
 #include "../include/output.h"
 #include "../include/translate.h"
 
-/*
-* TODO: 
-* Fix up program flow (returns induce memory leaks)
-* Ensure all error is written to stderr
-*/
+void cleanup( rom_file *rom, dump_file *dump )
+{
+	if( rom != NULL && rom->rom_buffer != NULL )
+	{
+		free( rom->rom_buffer );
+	}
+
+	if( dump != NULL )
+	{
+		if( dump->rom_buffer != NULL )
+		{
+			free( dump->rom_buffer );
+		}
+
+		if( dump->translated_buffer != NULL )
+		{
+			free( dump->translated_buffer );
+		}
+	}
+}
 
 int main( int argc, char** argv ) 
 {
@@ -34,7 +49,8 @@ int main( int argc, char** argv )
 	{
 		if( get_rom_length( &rom ) == -1 )
 		{
-			printf("Error getting rom length. Check your path.\n");
+			//no need to cleanup here as we haven't allocated anything yet
+			fprintf( stderr, "Error getting rom length.\n" );
 			return -1;
 		}
 
@@ -46,7 +62,7 @@ int main( int argc, char** argv )
 		{
 			print_buffer_contents_f( &rom, 0, options.unicode_flag );
 
-			free( rom.rom_buffer );
+			cleanup( &rom, &dump );
 			return 0;
 		}
 
@@ -54,9 +70,11 @@ int main( int argc, char** argv )
 		{
 			match_info matches = { 0 };
 
-			if( relative_search( &rom, &matches, options.relative_search_text, options.unicode_flag, options.fuzz_value) == -1 )
+			if( -1 == relative_search( &rom, &matches, options.relative_search_text, options.unicode_flag, options.fuzz_value) )
 			{
-				printf("Error occured while searching.\n");
+				fprintf( stderr, "Error occured while searching.\n" );
+
+				cleanup( &rom, &dump );
 				return -1;
 			}
 
@@ -84,13 +102,17 @@ int main( int argc, char** argv )
 					{
 						if( translation_return_info == -1 )
 						{
-							printf( "Error while generating the translation file.\n");
+							fprintf( stderr, "Error while generating the translation file.\n" );
+
+							cleanup( &rom, &dump );
 							return -1;
 						}
 						else if( translation_return_info == -2 )
 						{
-							printf( "Ambigious data set provided. Make sure character set provided are consistent.\n");
-							return 0;
+							fprintf( stderr, "Ambigious data set provided. Make sure character set provided are consistent.\n" );
+
+							cleanup( &rom, &dump );
+							return -1;
 						}
 					}
 				}
@@ -98,7 +120,7 @@ int main( int argc, char** argv )
 				free( translate_file_path );
 			}
 
-			free( rom.rom_buffer );
+			cleanup( &rom, &dump );
 			return 0;
 		}
 
@@ -106,12 +128,21 @@ int main( int argc, char** argv )
 		{
 			if( -1 == read_translation_file( options.translation_file_arg, options.unicode_flag ) )
 			{
-				printf( "Error while reading the translation file.\n" );
+				fprintf( stderr, "Error while reading the translation file.\n" );
+
+				cleanup( &rom, &dump );
+				return -1;
 			}
 
-			create_translated_rom( &rom, options.unicode_flag );
+			if( -1 == create_translated_rom( &rom, options.unicode_flag ) )
+			{
+				fprintf( stderr, "Error while creating the translated rom.\n" );
 
-			free( rom.rom_buffer );
+				cleanup( &rom, &dump );
+				return -1;
+			}
+
+			cleanup( &rom, &dump );
 			return 0;
 		}		
 	}
@@ -119,25 +150,43 @@ int main( int argc, char** argv )
 	{
 		if( -1 == read_translation_file( options.translation_file_arg, options.unicode_flag ) )
 		{
-			printf( "Error while reading the translation file.\n" );
+			fprintf( stderr, "Error while reading the translation file.\n" );
+
+			cleanup( &rom, &dump );
+			return -1;
 		}
 
-		if( get_dump_amount_of_lines( &dump ) == -1 )
+		if( -1 == get_dump_amount_of_lines( &dump ) )
 		{
-			printf( "Error while parsing the dump file.\n" );
+			fprintf( stderr, "Error while parsing the dump file.\n" );
+
+			cleanup( &rom, &dump );
+			return -1;
 		}
 
 		dump.rom_buffer 				= (unsigned char*) malloc( dump.rom_length );
 		dump.translated_buffer 			= (unsigned char*) malloc( dump.translated_length );
 
-		read_dump_file( &dump );
+		if( -1 == read_dump_file( &dump ) )
+		{
+			fprintf( stderr, "Error while reading the dump file.\n" );
 
-		write_translated_dump( &dump, options.write_file_path, options.unicode_flag );
+			cleanup( &rom, &dump );
+			return -1;
+		}
 
-		free( dump.rom_buffer );
-		free( dump.translated_buffer );
+		if( -1 == write_translated_dump( &dump, options.write_file_path, options.unicode_flag ) )
+		{
+			fprintf( stderr, "Error while writing the new rom.\n" );
+
+			cleanup( &rom, &dump );
+			return -1;
+		}
+
+		cleanup( &rom, &dump );
+		return 0;
 	}
 
-
+	cleanup( &rom, &dump );
 	return 0;
 }

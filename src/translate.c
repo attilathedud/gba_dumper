@@ -3,6 +3,12 @@
 
 #include "../include/translate.h"
 
+/*
+* TODO:
+*	Allow translation ranges to be specified
+*
+*/
+
 void generate_translation_range( byte_to_readable_set *s, char start_character, char end_character, int step_value )
 {
 	unsigned char byte_value[ 2 ] 		= { 0 };
