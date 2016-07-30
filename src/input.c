@@ -69,7 +69,7 @@ int handle_input( rom_file *rom, dump_file *dump, passed_options* options, int a
 					case 'o':
 						fprintf(stderr, "Option %c requires a valid path to an output file.\n", optopt);
 						break;
-					case 'w':
+					case 'm':
 						fprintf(stderr, "Option %c requires a valid path to a dump file.\n", optopt);
 						break;
 					default:
