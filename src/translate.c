@@ -86,6 +86,7 @@ int generate_translation_set_from_matches( rom_file *rom, char* translate_file_p
 	byte_to_readable_set *s = get_byte_to_readable_hash( );
 
 	//iterate through our initial search text, and generate the rest of the characters based on what's already there.
+	//we have to use a for loop or else we will get stuck in an infinite loop as hashes keep getting added.
 	for(int i = 0; i < get_byte_to_readable_hash_count( ) && s != NULL; i++) {
 		generate_translation_range( s, 'A', 'Z' );
 		generate_translation_range( s, 'a', 'z' );

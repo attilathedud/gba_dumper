@@ -67,7 +67,7 @@ void print_match_list( rom_file *rom, match_info *matches, int relative_search_t
 
 	if( matches->amount_of_matches == 0 )
 	{
-		fprintf( stderr, "No matches found. Try adding fuzz or switching encodings. (or your text might actually be a graphic!)\n" );
+		fprintf( stderr, "No matches found. Try adding fuzz - or your text might actually be a graphic.\n" );
 		return;
 	}
 
