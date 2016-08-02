@@ -80,10 +80,8 @@ int read_dump_file( dump_file *dump )
 	return 0;
 }
 
-int write_translated_dump( dump_file *dump, char* write_file_path )
+int write_translated_dump( dump_file *dump )
 {
-	FILE *write_file 							= NULL;
-
 	char readable 						= 0;
 	unsigned char byte_value[ 2 ]		= { 0 };
 
@@ -92,11 +90,7 @@ int write_translated_dump( dump_file *dump, char* write_file_path )
 	if( dump == NULL || get_byte_to_readable_hash() == NULL )
 		return -1;
 
-	write_file = fopen( write_file_path, "wb" );
-	if( write_file == NULL )
-		return -1;
-
-	for( int i = 0; i < dump->rom_length; i += 2 )
+	for( int i = 0; i < dump->rom_length; i++ )
 	{
 		memcpy( byte_value, dump->rom_buffer + i, 2 );
 
@@ -113,7 +107,7 @@ int write_translated_dump( dump_file *dump, char* write_file_path )
 		}
 	}
 
-	fwrite( dump->rom_buffer, dump->rom_length, 1, write_file );
+	fwrite( dump->rom_buffer, dump->rom_length, 1, stdout );
 
 	delete_byte_to_readable_hash( );
 

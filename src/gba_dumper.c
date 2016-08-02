@@ -175,7 +175,7 @@ int main( int argc, char** argv )
 			return 0;
 		}		
 	}
-	else if( dump.dump_path != NULL && options.write_file_path != NULL && options.translation_file_arg != NULL )
+	else if( dump.dump_path != NULL && options.translation_file_arg != NULL )
 	{
 		if( -1 == read_translation_file( options.translation_file_arg ) )
 		{
@@ -204,7 +204,7 @@ int main( int argc, char** argv )
 			return -1;
 		}
 
-		if( -1 == write_translated_dump( &dump, options.write_file_path ) )
+		if( -1 == write_translated_dump( &dump ) )
 		{
 			fprintf( stderr, "Error while writing the new rom.\n" );
 

@@ -17,7 +17,7 @@ int handle_input( rom_file *rom, dump_file *dump, passed_options* options, int a
 	if( rom == NULL || options == NULL || dump == NULL )
 		return 1;
 
-	while( (cur_arg = getopt( argc, argv, "f:r:dz:t:m:o:" ) ) != -1 )
+	while( (cur_arg = getopt( argc, argv, "f:r:dz:t:m:" ) ) != -1 )
 	{
 		switch( cur_arg )
 		{
@@ -32,9 +32,6 @@ int handle_input( rom_file *rom, dump_file *dump, passed_options* options, int a
 				break;
 			case 't':
 				options->translation_file_arg = optarg;
-				break;
-			case 'o':
-				options->write_file_path = optarg;
 				break;
 			case 'm':
 				dump->dump_path = optarg;
@@ -62,9 +59,6 @@ int handle_input( rom_file *rom, dump_file *dump, passed_options* options, int a
 						break;
 					case 't':
 						fprintf(stderr, "Option %c requires a valid path to a translation file.\n", optopt);
-						break;
-					case 'o':
-						fprintf(stderr, "Option %c requires a valid path to an output file.\n", optopt);
 						break;
 					case 'm':
 						fprintf(stderr, "Option %c requires a valid path to a dump file.\n", optopt);
