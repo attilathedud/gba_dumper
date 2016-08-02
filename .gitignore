@@ -17,7 +17,7 @@ roms/*
 *.gba
 
 # The main executable
-rom_dumper*
+gba_dumper
 
 # Ignore debug translation files
 *.tra

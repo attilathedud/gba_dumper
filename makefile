@@ -11,13 +11,13 @@ SOURCES = $(wildcard $(SOURCEDIR)/*.c) $(wildcard $(SOURCEDIR)/*/*.c)
 	$(CC) -c -o $@ $< $(CFLAGS)
 
 all: $(SOURCES)
-	$(CC) -o rom_dumper $(SOURCES) $(CFLAGS)
+	$(CC) -o gba_dumper $(SOURCES) $(CFLAGS)
 
 debug: $(SOURCES)
-	$(CC) -o rom_dumper_debug $(SOURCES) -g $(CFLAGS)
+	$(CC) -o gba_dumper_debug $(SOURCES) -g $(CFLAGS)
 
 .PHONY: clean
 
 clean:
-	rm -f src/*.o rom_dumper
+	rm -f src/*.o gba_dumper
 	
