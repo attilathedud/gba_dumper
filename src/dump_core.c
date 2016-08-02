@@ -90,7 +90,7 @@ int write_translated_dump( dump_file *dump )
 	if( dump == NULL || get_byte_to_readable_hash() == NULL )
 		return -1;
 
-	for( int i = 0; i < dump->rom_length; i++ )
+	for( int i = 0; i < dump->rom_length; i += 2 )
 	{
 		memcpy( byte_value, dump->rom_buffer + i, 2 );
 
@@ -101,7 +101,6 @@ int write_translated_dump( dump_file *dump )
 				if( 1 == find_readable_to_byte_hash_value( dump->translated_buffer[ i / 2 ], new_byte_value ) )
 				{
 					memcpy( dump->rom_buffer + i, new_byte_value, 2 );
-					i++;
 				}
 			}
 		}
