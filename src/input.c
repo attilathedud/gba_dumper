@@ -8,16 +8,29 @@
 
 #include "../include/input.h"
 
+unsigned long get_long_value_from_optarg( char* optarg, int base )
+{
+	char *temp_end_for_conversion;
+
+	errno = 0;
+
+	unsigned long temp_value = strtol( optarg, &temp_end_for_conversion, base);
+	if( temp_end_for_conversion != optarg && errno != ERANGE && (temp_value >= INT_MIN || temp_value <= INT_MAX))
+	{
+		return temp_value;
+	}
+
+	return -1;
+}
+
 int handle_input( rom_file *rom, dump_file *dump, passed_options* options, int argc, char** argv )
 {
 	int cur_arg 								= 0;
 
-	char *temp_end_for_conversion;
-
 	if( rom == NULL || options == NULL || dump == NULL )
 		return 1;
 
-	while( (cur_arg = getopt( argc, argv, "f:r:dz:t:m:" ) ) != -1 )
+	while( (cur_arg = getopt( argc, argv, "f:r:dz:t:m:s:a:e:" ) ) != -1 )
 	{
 		switch( cur_arg )
 		{
@@ -36,14 +49,17 @@ int handle_input( rom_file *rom, dump_file *dump, passed_options* options, int a
 			case 'm':
 				dump->dump_path = optarg;
 				break;
+			case 's':
+				options->rom_string_break = optarg;
+				break;
+			case 'a':
+				options->start_address = get_long_value_from_optarg( optarg, 16 );
+				break;
+			case 'e':
+				options->end_address = get_long_value_from_optarg( optarg, 16 );
+				break;
 			case 'z':
-				errno = 0;
-
-				long temp_value = strtol( optarg, &temp_end_for_conversion, 10);
-				if( temp_end_for_conversion != optarg && errno != ERANGE && (temp_value >= INT_MIN || temp_value <= INT_MAX))
-				{
-					options->fuzz_value = ( int ) temp_value;
-				}
+				options->fuzz_value = (int)get_long_value_from_optarg( optarg, 10 );
 				break;
 			case '?':
 				switch( optopt )
@@ -62,6 +78,13 @@ int handle_input( rom_file *rom, dump_file *dump, passed_options* options, int a
 						break;
 					case 'm':
 						fprintf(stderr, "Option %c requires a valid path to a dump file.\n", optopt);
+						break;
+					case 's':
+						fprintf(stderr, "Option %c requires a valid break character (2 byte hex value).\n", optopt);
+						break;
+					case 'a':
+					case 'e':
+						fprintf(stderr, "Option %c requires a valid hex address.\n", optopt);
 						break;
 					default:
 						if ( isprint( optopt ) )

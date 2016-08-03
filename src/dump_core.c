@@ -4,6 +4,13 @@
 #include "../include/dump_core.h"
 #include "../include/utils/utils.h"
 
+/*
+* TODO
+*	Fix up magic numbers
+*	Clean up code
+*	Move output stuff to output file
+*/
+
 int get_dump_amount_of_lines( dump_file *dump )
 {
 	FILE *dump_file 					= NULL;
@@ -109,6 +116,31 @@ int write_translated_dump( dump_file *dump )
 	fwrite( dump->rom_buffer, dump->rom_length, 1, stdout );
 
 	delete_byte_to_readable_hash( );
+
+	return 0;
+}
+
+//on each getline, insert until the next break when writing changes back
+int write_dump_strings( dump_file *dump, unsigned long start_address, unsigned long end_address, char* rom_string_break )
+{
+	unsigned char byte_rom_string_break[ 2 ]						= { 0 };
+
+	if( dump == NULL || start_address > end_address || end_address > dump->rom_length || rom_string_break == NULL )
+		return -1;
+
+	byte_literal_to_hex_value( byte_rom_string_break, rom_string_break, 2 * 2 );
+
+	for( unsigned long i = start_address; i < end_address; i += 2 )
+	{
+		if( dump->rom_buffer[ i ] == byte_rom_string_break[ 0 ] && dump->rom_buffer[ i + 1 ] == byte_rom_string_break[ 1 ] )
+		{
+			printf("\n");
+		}
+		else
+		{
+			printf( "%c", dump->translated_buffer[ i / 2 ] );
+		}
+	}
 
 	return 0;
 }

@@ -175,16 +175,8 @@ int main( int argc, char** argv )
 			return 0;
 		}		
 	}
-	else if( dump.dump_path != NULL && options.translation_file_arg != NULL )
+	else if( dump.dump_path != NULL )
 	{
-		if( -1 == read_translation_file( options.translation_file_arg ) )
-		{
-			fprintf( stderr, "Error while reading the translation file.\n" );
-
-			cleanup( &rom, &dump );
-			return -1;
-		}
-
 		if( -1 == get_dump_amount_of_lines( &dump ) )
 		{
 			fprintf( stderr, "Error while parsing the dump file.\n" );
@@ -204,12 +196,33 @@ int main( int argc, char** argv )
 			return -1;
 		}
 
-		if( -1 == write_translated_dump( &dump ) )
+		if( options.translation_file_arg != NULL )
 		{
-			fprintf( stderr, "Error while writing the new rom.\n" );
+			if( -1 == read_translation_file( options.translation_file_arg ) )
+			{
+				fprintf( stderr, "Error while reading the translation file.\n" );
 
-			cleanup( &rom, &dump );
-			return -1;
+				cleanup( &rom, &dump );
+				return -1;
+			}
+
+			if( -1 == write_translated_dump( &dump ) )
+			{
+				fprintf( stderr, "Error while writing the new rom.\n" );
+
+				cleanup( &rom, &dump );
+				return -1;
+			}
+		}
+		else if( options.rom_string_break != NULL )
+		{
+			if( -1 == write_dump_strings( &dump, options.start_address, options.end_address, options.rom_string_break ) )
+			{
+				fprintf( stderr, "Error while extracting the dump's strings.\n" );
+
+				cleanup( &rom, &dump );
+				return -1;
+			}
 		}
 
 		cleanup( &rom, &dump );

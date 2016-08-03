@@ -7,7 +7,6 @@
 /*
 * TODO: 
 * 	Remove magic numbers
-*	Fix crash while translating ascii rom
 */
 
 unsigned long get_rom_length( rom_file *rom )
