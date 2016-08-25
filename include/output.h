@@ -16,6 +16,7 @@
 #endif
 
 void print_buffer_contents_f( rom_file*, unsigned long );
+void reprint_dump_contents( dump_file *, unsigned long );
 void print_match_list( rom_file*, match_info*, int );
 void print_buffer_as_bytes( FILE*, unsigned char*, long );
 void print_character_translation( FILE *, char );

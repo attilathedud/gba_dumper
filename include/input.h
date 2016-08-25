@@ -9,7 +9,7 @@ typedef struct {
 
 	char *relative_search_text;
 	char *translation_file_arg;
-
+	char *strings_file_arg;
 	char *rom_string_break;
 
 	unsigned long start_address;

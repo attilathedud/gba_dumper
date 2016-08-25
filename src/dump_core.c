@@ -120,7 +120,6 @@ int write_translated_dump( dump_file *dump )
 	return 0;
 }
 
-//on each getline, insert until the next break when writing changes back
 int write_dump_strings( dump_file *dump, unsigned long start_address, unsigned long end_address, char* rom_string_break )
 {
 	unsigned char byte_rom_string_break[ 2 ]						= { 0 };
@@ -141,6 +140,58 @@ int write_dump_strings( dump_file *dump, unsigned long start_address, unsigned l
 			printf( "%c", dump->translated_buffer[ i / 2 ] );
 		}
 	}
+
+	return 0;
+}
+
+//on each getline, insert until the next break when writing changes back
+int read_and_translate_dump_strings( dump_file *dump, char* strings_file_path, unsigned long start_address, 
+	unsigned long end_address, char* rom_string_break )
+{
+	FILE *strings_file 						= NULL;
+
+	unsigned char byte_rom_string_break[ 2 ]						= { 0 };
+
+	if( dump == NULL || strings_file_path == NULL || start_address > end_address ||
+		 end_address > dump->rom_length || rom_string_break == NULL )
+		return -1;
+
+	byte_literal_to_hex_value( byte_rom_string_break, rom_string_break, 2 * 2 );
+
+	strings_file = fopen( strings_file_path, "r" );
+	if( strings_file == NULL )
+		return -1;
+
+	char *cur_line							= NULL;
+	size_t cur_len 							= 0;
+
+	ssize_t read_len 						= 0;
+
+	unsigned long cur_dump_offset			= 0;
+
+	while( (read_len = getline( &cur_line, &cur_len, strings_file ) ) != -1 )
+	{
+		int current_write_position			= 0;
+
+		while( !( dump->rom_buffer[ start_address + cur_dump_offset ] == byte_rom_string_break[ 0 ] && 
+			dump->rom_buffer[ start_address + cur_dump_offset + 1 ] == byte_rom_string_break[ 1 ]) )
+		{
+			if( current_write_position > read_len - 2 )
+			{
+				dump->translated_buffer[ ( start_address + cur_dump_offset ) / 2 ] = ' ';
+			}
+			else
+			{
+				dump->translated_buffer[ ( start_address + cur_dump_offset ) / 2 ] = cur_line[ current_write_position++ ];
+			}
+
+			cur_dump_offset += 2;
+		}
+
+		cur_dump_offset += 2;
+	}
+
+	free( cur_line );
 
 	return 0;
 }

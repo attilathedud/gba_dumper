@@ -30,7 +30,7 @@ int handle_input( rom_file *rom, dump_file *dump, passed_options* options, int a
 	if( rom == NULL || options == NULL || dump == NULL )
 		return 1;
 
-	while( (cur_arg = getopt( argc, argv, "f:r:dz:t:m:s:a:e:" ) ) != -1 )
+	while( (cur_arg = getopt( argc, argv, "f:r:dz:t:m:s:b:a:e:" ) ) != -1 )
 	{
 		switch( cur_arg )
 		{
@@ -49,8 +49,11 @@ int handle_input( rom_file *rom, dump_file *dump, passed_options* options, int a
 			case 'm':
 				dump->dump_path = optarg;
 				break;
-			case 's':
+			case 'b':
 				options->rom_string_break = optarg;
+				break;
+			case 's':
+				options->strings_file_arg = optarg;
 				break;
 			case 'a':
 				options->start_address = get_long_value_from_optarg( optarg, 16 );
@@ -79,8 +82,11 @@ int handle_input( rom_file *rom, dump_file *dump, passed_options* options, int a
 					case 'm':
 						fprintf(stderr, "Option %c requires a valid path to a dump file.\n", optopt);
 						break;
-					case 's':
+					case 'b':
 						fprintf(stderr, "Option %c requires a valid break character (2 byte hex value).\n", optopt);
+						break;
+					case 's':
+						fprintf(stderr, "Option %c requires a valid path to a strings file.\n", optopt);
 						break;
 					case 'a':
 					case 'e':

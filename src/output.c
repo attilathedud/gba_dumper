@@ -60,6 +60,41 @@ void print_buffer_contents_f( rom_file *rom, unsigned long len_to_display )
 	printf("\n");
 }
 
+void reprint_dump_contents( dump_file *dump, unsigned long len_to_display )
+{
+	unsigned char temp_translated_buffer[ 17 ] 	= { 0 };
+
+	if( dump == NULL || dump->rom_buffer == NULL || dump->translated_buffer == NULL )
+		return;
+
+	if( len_to_display == 0 )
+		len_to_display = dump->rom_length;
+
+	printf( "0x00000000 |\t" );
+
+	for ( int i = 0; i < len_to_display; i++ )
+	{
+		printf( "%.2X", dump->rom_buffer[ i ] );
+
+		if (i % 4 == 3)
+			printf( " " );
+
+		if (i % 32 == 31)
+		{
+			printf( "\t| " );
+
+			memcpy( temp_translated_buffer, dump->translated_buffer + (i - 31) / 2, 16 );
+			temp_translated_buffer[ 16 ] = '\0';
+			printf( "%s", temp_translated_buffer );
+
+			if( i + 1 < len_to_display )
+				printf( "\n0x%.8X |\t", i + 1 );
+		}
+	}	
+
+	printf("\n");
+}
+
 void print_match_list( rom_file *rom, match_info *matches, int relative_search_text_length ) 
 {
 	if( rom == NULL || rom->rom_buffer == NULL || matches == NULL )

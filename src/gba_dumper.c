@@ -216,12 +216,28 @@ int main( int argc, char** argv )
 		}
 		else if( options.rom_string_break != NULL )
 		{
-			if( -1 == write_dump_strings( &dump, options.start_address, options.end_address, options.rom_string_break ) )
+			if( options.strings_file_arg != NULL )
 			{
-				fprintf( stderr, "Error while extracting the dump's strings.\n" );
+				if( -1 == read_and_translate_dump_strings( &dump, options.strings_file_arg, options.start_address, 
+					options.end_address, options.rom_string_break ))
+				{
+					fprintf( stderr, "Error while writing strings back to the dump.\n" );
 
-				cleanup( &rom, &dump );
-				return -1;
+					cleanup( &rom, &dump );
+					return -1;
+				}
+
+				reprint_dump_contents( &dump, dump.rom_length );
+			}
+			else
+			{
+				if( -1 == write_dump_strings( &dump, options.start_address, options.end_address, options.rom_string_break ) )
+				{
+					fprintf( stderr, "Error while extracting the dump's strings.\n" );
+
+					cleanup( &rom, &dump );
+					return -1;
+				}
 			}
 		}
 

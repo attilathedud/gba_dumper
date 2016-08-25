@@ -18,3 +18,4 @@ int read_dump_file( dump_file* );
 int write_translated_dump( dump_file* );
 
 int write_dump_strings( dump_file *, unsigned long, unsigned long, char* );
+int read_and_translate_dump_strings( dump_file *, char*, unsigned long, unsigned long, char* );
