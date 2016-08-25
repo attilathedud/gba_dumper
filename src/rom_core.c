@@ -103,6 +103,8 @@ int read_translation_file( char *filename )
 			readable = ' ';
 
 		add_byte_to_readable_hash( byte_hex, readable );
+
+		readable = 0;
 	}
 
 	free( cur_line );
