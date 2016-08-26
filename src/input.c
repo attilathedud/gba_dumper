@@ -8,6 +8,39 @@
 
 #include "../include/input.h"
 
+char* help_text 				= "gba_dumper v1.0 by Nathan Tucker.\n\n" \
+								   "gba_dumper is a set of utilites designed to make text modifications for Game Boy Advanced (gba) roms easier. " \
+								   "Since gba games don't use ascii and instead each use their own homebrew-encoding, gba_dumper attempts to streamline "\
+								   "the approach of translating rom byte-codes into human-readable characters.\n\n" \
+								   "The intended workflow is:\n" \
+								   "1. Search for a string of text\n2. Using the matches, let gba_dumper create a translation file." \
+								   "If there are multiple conflicting matches, gba_dumper will prompt you to choose the matching set.\n" \
+								   "3. Using that translation file, dump a \"translated\" version of the rom.\n" \
+								   "4. Using that dump, add special characters (:!@#, spaces, etc.) to the translation file and retranslate.\n" \
+								   "5. Using the dump, note the areas of memory that hold strings you want to edit, and note the character used as a newline character in the game.\n" \
+								   "6. Dump the memory noted in 5, edit all the strings you want, and reupload them to a new dump.\n" \
+								   "7. Using the modified dump, create a new rom.\n\n" \
+								   "Options:\n" \
+								   "-f\tPath to the rom to perform operations on. This must be the uncompressed .gba file.\n" \
+								   "-r\tText to search for within the rom.\n"\
+								   "-z\tWhen searching for text, the amount of fuzz (or allowed error) to apply.\n"\
+								   "-d\tDump the formatted bytes of the rom.\n"\
+								   "-t\tPath to a valid translation file, which is newline separated list of byte_value : character values (e.g., 00FF : b).\n"\
+								   "-m\tPath to a valid dump file, which is automatically generated after translating the rom.\n"\
+								   "-b\tThe two-byte value that the game uses for segment breaks within contiguous memory spaces\n"\
+								   "-a\tWhen dumping strings, the start address of memory to start dumping at.\n"\
+								   "-e\tWhen dumping strings, the end address of memory to end dumping at.\n"\
+								   "-s\tPath to a valid strings file to write back to the dump, which is a newline separated list of strings.\n\n"\
+								   "Example Usage:\n"\
+								   "Step 1:\t$ gba_dumper -f roms/rom.gba -r \"Example\"\n" \
+								   "\t1: 0x00721940	C100D300D300C900C700CE00C500C400\n"\
+								   "\tAttempt to generate a translation file? (if yes, type file name. For no, type nothing):\n"\
+								   "\trom.tra\n"\
+								   "Step 3:\t $ gba_dumper -f roms/rom.gba -t rom.tra > rom.dmp\n"\
+								   "Step 5:\t $ gba_dumper -m rom.dmp -b 00FF -a 0x00721920 -e 0x007226A0 > rom.str\n"\
+								   "Step 6:\t $ gba_dumper -m rom.dmp -s rom.str -b 00FF -a 0x00721920 -e 0x007226A0 > rom2.dmp\n"\
+								   "Step 7:\t $ gba_dumper -m rom2.dmp -t rom.tra > rom2.gba\n";
+
 unsigned long get_long_value_from_optarg( char* optarg, int base )
 {
 	char *temp_end_for_conversion;
@@ -30,7 +63,7 @@ int handle_input( rom_file *rom, dump_file *dump, passed_options* options, int a
 	if( rom == NULL || options == NULL || dump == NULL )
 		return 1;
 
-	while( (cur_arg = getopt( argc, argv, "f:r:dz:t:m:s:b:a:e:" ) ) != -1 )
+	while( (cur_arg = getopt( argc, argv, "hf:r:dz:t:m:s:b:a:e:" ) ) != -1 )
 	{
 		switch( cur_arg )
 		{
@@ -63,6 +96,9 @@ int handle_input( rom_file *rom, dump_file *dump, passed_options* options, int a
 				break;
 			case 'z':
 				options->fuzz_value = (int)get_long_value_from_optarg( optarg, 10 );
+				break;
+			case 'h':
+				printf( "%s\n", help_text );
 				break;
 			case '?':
 				switch( optopt )
