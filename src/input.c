@@ -8,7 +8,7 @@
 
 #include "../include/input.h"
 
-char* help_text 				= "gba_dumper v1.0 by Nathan Tucker.\n\n" \
+char* help_text 				=  "gba_dumper v1.0 by Nathan Tucker.\n\n" \
 								   "gba_dumper is a set of utilites designed to make text modifications for Game Boy Advanced (gba) roms easier. " \
 								   "Since gba games don't use ascii and instead each use their own homebrew-encoding, gba_dumper attempts to streamline "\
 								   "the approach of translating rom byte-codes into human-readable characters.\n\n" \
@@ -41,6 +41,13 @@ char* help_text 				= "gba_dumper v1.0 by Nathan Tucker.\n\n" \
 								   "Step 6:\t $ gba_dumper -m rom.dmp -s rom.str -b 00FF -a 0x00721920 -e 0x007226A0 > rom2.dmp\n"\
 								   "Step 7:\t $ gba_dumper -m rom2.dmp -t rom.tra > rom2.gba\n";
 
+/*! 
+*	Helper function to safety extract a numerical value from a passed character array.
+*
+*	Sets errno with the result of strtol.
+*
+*	Returns the value on success, -1 on failure.
+*/
 unsigned long get_long_value_from_optarg( char* optarg, int base )
 {
 	char *temp_end_for_conversion;
@@ -56,6 +63,16 @@ unsigned long get_long_value_from_optarg( char* optarg, int base )
 	return -1;
 }
 
+/*!
+*	Given pointers to the rom/dump files, along with the argument vector, populate the options structure.
+*
+*	rom:		Pointer to an allocated rom_file.
+*	dump:		Pointer to an allocated dump_file.
+*	options:	Pointer to an allocation options structure that will be filled with relevant data.
+*	argc, argv:	The argument count and vector retrieved from main.
+*
+*	Returns 0 if success, 1 if invalid arguments or error parsing the arguments.
+*/
 int handle_input( rom_file *rom, dump_file *dump, passed_options* options, int argc, char** argv )
 {
 	int cur_arg 								= 0;
@@ -104,7 +121,10 @@ int handle_input( rom_file *rom, dump_file *dump, passed_options* options, int a
 				switch( optopt )
 				{
 					case 'f':
-						fprintf( stderr, "Option %c requires a valid path to a rom.\n", optopt );
+					case 'm':
+					case 't':
+					case 's':
+						fprintf( stderr, "Option %c requires a valid path to a file.\n", optopt );
 						break;
 					case 'r':
 						fprintf(stderr, "Option %c requires a valid string to search.\n", optopt);
@@ -112,17 +132,8 @@ int handle_input( rom_file *rom, dump_file *dump, passed_options* options, int a
 					case 'z':
 						fprintf(stderr, "Option %c requires a valid integer to fuzz with.\n", optopt);
 						break;
-					case 't':
-						fprintf(stderr, "Option %c requires a valid path to a translation file.\n", optopt);
-						break;
-					case 'm':
-						fprintf(stderr, "Option %c requires a valid path to a dump file.\n", optopt);
-						break;
 					case 'b':
 						fprintf(stderr, "Option %c requires a valid break character (2 byte hex value).\n", optopt);
-						break;
-					case 's':
-						fprintf(stderr, "Option %c requires a valid path to a strings file.\n", optopt);
 						break;
 					case 'a':
 					case 'e':
