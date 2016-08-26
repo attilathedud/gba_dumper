@@ -22,14 +22,14 @@ void generate_translation_range( byte_to_readable_set *s, char start_character, 
 		{
 			memcpy( byte_value, s->byte_value, 2);
 			byte_value[ 0 ]-= j;
-			add_byte_to_readable_hash( byte_value, s->readable - j);
+			add_element_to_hashes( byte_value, s->readable - j);
 		}
 
 		for( int j = 0; j <= end_character - s->readable; j++ )
 		{
 			memcpy( byte_value, s->byte_value, 2);
 			byte_value[ 0 ]+= j;
-			add_byte_to_readable_hash( byte_value, s->readable + j);
+			add_element_to_hashes( byte_value, s->readable + j);
 		}
 	}
 }
@@ -78,7 +78,7 @@ int generate_translation_set_from_matches( rom_file *rom, char* translate_file_p
 	for( int i = 0; i < strlen( relative_search_text ); i++ )
 	{
 		memcpy( byte_value, data1 + i * 2, 2 );
-		add_byte_to_readable_hash( byte_value, relative_search_text[ i ]);
+		add_element_to_hashes( byte_value, relative_search_text[ i ]);
 	}
 
 	sort_byte_to_readable( );
@@ -98,7 +98,7 @@ int generate_translation_set_from_matches( rom_file *rom, char* translate_file_p
 
 	int successful_write_flag = create_translation_file( translate_file_path );
 
-	delete_byte_to_readable_hash( );
+	delete_hashes( );
 
 	free( data1 );
 	free( data2 );

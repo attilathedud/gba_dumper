@@ -4,11 +4,6 @@
 #include "../include/rom_core.h"
 #include "../include/utils/utils.h"
 
-/*
-* TODO: 
-* 	Remove magic numbers
-*/
-
 unsigned long get_rom_length( rom_file *rom )
 {
 	FILE *rom_file						= NULL;
@@ -95,14 +90,14 @@ int read_translation_file( char *filename )
 
 		if( -1 == byte_literal_to_hex_value( byte_hex, (char*)byte_literal, 2 * 2 ) )
 		{
-			delete_byte_to_readable_hash( );
+			delete_hashes( );
 			return -1;
 		}
 
 		if( readable == 0 )
 			readable = ' ';
 
-		add_byte_to_readable_hash( byte_hex, readable );
+		add_element_to_hashes( byte_hex, readable );
 
 		readable = 0;
 	}
@@ -121,7 +116,7 @@ int create_translated_rom( rom_file *rom )
 
 	print_buffer_contents_f( rom, rom->rom_length );
 
-	delete_byte_to_readable_hash( );
+	delete_hashes( );
 
 	return 0;
 }

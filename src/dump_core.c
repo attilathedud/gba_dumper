@@ -132,7 +132,7 @@ int write_translated_dump( dump_file *dump )
 
 	fwrite( dump->rom_buffer, dump->rom_length, 1, stdout );
 
-	delete_byte_to_readable_hash( );
+	delete_hashes( );
 
 	return 0;
 }
