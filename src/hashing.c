@@ -7,18 +7,30 @@ void add_byte_to_readable_hash( unsigned char* byte_value, char readable )
 {
 	byte_to_readable_set *s = NULL, *s2 = NULL;
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wpointer-sign"
 	HASH_FIND_STR( byte_to_readable_translation_set, byte_value, s);
+#pragma GCC diagnostic pop
+
 	if( s == NULL )
 	{
 		s = malloc( sizeof( byte_to_readable_set ) );
 		memcpy( s->byte_value, byte_value, 2 );
 		s->readable = readable;
+
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wpointer-sign"
 		HASH_ADD_STR( byte_to_readable_translation_set, byte_value, s );
+#pragma GCC diagnostic pop
 
 		s2 = malloc( sizeof( byte_to_readable_set ) );
 		memcpy( s2->byte_value, byte_value, 2 );
 		s2->readable = readable;
+
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wpointer-sign"
 		HASH_ADD_INT( readable_to_byte_translation_set, readable, s2 );
+#pragma GCC diagnostic pop
 	}
 }
 
@@ -26,7 +38,11 @@ char find_byte_to_readable_hash_value( unsigned char* byte_value )
 {
 	byte_to_readable_set *s = NULL;
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wpointer-sign"
 	HASH_FIND_STR( byte_to_readable_translation_set, byte_value, s );
+#pragma GCC diagnostic pop
+
 	if( s == NULL )
 		return 0;
 
@@ -42,7 +58,11 @@ int find_readable_to_byte_hash_value( char readable, unsigned char *buffer )
 
 	int _readable = (int)readable;
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wpointer-sign"
 	HASH_FIND_INT( readable_to_byte_translation_set, &_readable, s );
+#pragma GCC diagnostic pop
+	
 	if( s == NULL )
 		return 0;
 

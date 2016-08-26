@@ -93,7 +93,7 @@ int read_translation_file( char *filename )
 	{
 		sscanf( cur_line, "%s : %c", byte_literal, &readable );
 
-		if( -1 == byte_literal_to_hex_value( byte_hex, byte_literal, 2 * 2 ) )
+		if( -1 == byte_literal_to_hex_value( byte_hex, (char*)byte_literal, 2 * 2 ) )
 		{
 			delete_byte_to_readable_hash( );
 			return -1;

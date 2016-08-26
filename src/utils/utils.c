@@ -42,7 +42,7 @@ int byte_literal_to_hex_value( unsigned char *byte_hex, char *byte_literal, int 
 *
 *	str:	A character buffer that is a valid null-terminating string.
 */
-void remove_spaces_from_string( char *str )
+void remove_spaces_from_string( unsigned char *str )
 {
 	int count = 0;
 

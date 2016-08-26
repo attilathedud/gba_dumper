@@ -1,5 +1,3 @@
-#pragma GCC diagnostic ignored "-Wpointer-sign"
-
 #include "utils/uthash.h"
 
 typedef struct {

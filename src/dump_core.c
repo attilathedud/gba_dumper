@@ -78,7 +78,7 @@ int read_dump_file( dump_file *dump )
 
 		remove_spaces_from_string( byte_literal );
 
-		byte_literal_to_hex_value( byte_hex, byte_literal, BYTES_PER_DUMP_LINE * 2 );
+		byte_literal_to_hex_value( byte_hex, (char*)byte_literal, BYTES_PER_DUMP_LINE * 2 );
 		memcpy( dump->rom_buffer + cur_rom_buffer_pos, byte_hex, BYTES_PER_DUMP_LINE );
 
 		//first character is a space to deal with sscanf not filling values correctly otherwise

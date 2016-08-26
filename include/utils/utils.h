@@ -3,11 +3,11 @@
 */
 
 /*!
-*	Given a char* containing the literal byte values (e.g., "2E00") will fill the unsigned char* with the actual hex value (e.g., 0x2E00).	
+*	Given a char buffer containing the literal byte values (e.g., "2E00") will fill the unsigned char* with the actual hex value (e.g., 0x2E00).	
 */
 int byte_literal_to_hex_value( unsigned char *, char *, int );
 
 /*!
-*	Given a char*, remove spaces over the entire string. Modifies the string in place. 
+*	Given a char buffer, remove spaces over the entire string. Modifies the string in place. 
 */
-void remove_spaces_from_string( char * );
+void remove_spaces_from_string( unsigned char * );
