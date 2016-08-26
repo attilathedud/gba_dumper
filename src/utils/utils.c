@@ -3,8 +3,18 @@
 
 #include "../../include/utils/utils.h"
 
-//Modified form of the answer provided here: 
-//https://stackoverflow.com/questions/3408706/hexadecimal-string-to-byte-array-in-c/21510910#21510910
+/*!
+*	Convert a character byte value ("2E00") to the actual byte value (0x2E00)
+*
+*	Modified form of the answer provided here: 
+*	https://stackoverflow.com/questions/3408706/hexadecimal-string-to-byte-array-in-c/21510910#21510910
+*
+*	byte_hex:			An allocated buffer that will hold the actual byte value when the function returns.
+*	byte_literal:		A character buffer holding the text representation of the bytes.
+*	byte_literal_len:	The length of byte_literal.
+*
+*	Returns 0 on success, -1 on an empty or odd length of byte_literal.
+*/
 int byte_literal_to_hex_value( unsigned char *byte_hex, char *byte_literal, int byte_literal_len )
 {
 	char *cur_position_in_byte_literal = byte_literal;
@@ -27,6 +37,11 @@ int byte_literal_to_hex_value( unsigned char *byte_hex, char *byte_literal, int 
 	return 0;
 }
 
+/*!
+*	Given a char*, remove spaces over the entire string. Modifies the string in place. 
+*
+*	str:	A character buffer that is a valid null-terminating string.
+*/
 void remove_spaces_from_string( char *str )
 {
 	int count = 0;

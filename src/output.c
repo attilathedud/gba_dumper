@@ -130,3 +130,11 @@ void print_character_translation( FILE *output_file, char readable )
 {
 	output_file == NULL ? printf( " : %c\n", readable ) : fprintf( output_file, " : %c\n", readable );
 }
+
+void print_newline_or_character( int condition, char character_to_print )
+{
+	if( condition )
+		printf( "\n" );
+	else
+		printf( "%c", character_to_print );
+}

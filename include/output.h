@@ -20,3 +20,4 @@ void reprint_dump_contents( dump_file *, unsigned long );
 void print_match_list( rom_file*, match_info*, int );
 void print_buffer_as_bytes( FILE*, unsigned char*, long );
 void print_character_translation( FILE *, char );
+void print_newline_or_character( int, char );
