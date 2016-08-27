@@ -30,3 +30,7 @@ generated_test3.tra
 1
 EOF
 diff_and_cleanup "correct/test3.tra" "generated_test3.tra" "Fuzz and ambiguous search"
+
+# Translating rom
+../gba_dumper -f test.gba -t correct/test3.tra > generated_test4.dmp
+diff_and_cleanup "correct/test4.dmp" "generated_test4.dmp" "Translation"
