@@ -11,16 +11,5 @@
 *.dSYM/
 *.su
 
-# Rom files for testing
-roms/
-roms/*
-*.gba
-
 # The main executable
 gba_dumper
-
-# Ignore debug translation files
-*.tra
-
-# Ignore debug dump files
-*.dmp
