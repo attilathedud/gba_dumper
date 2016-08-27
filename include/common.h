@@ -31,3 +31,13 @@ typedef struct {
 	unsigned char *translated_buffer;
 	unsigned long translated_length;
 } dump_file;
+
+/*!
+*	An example line from a dump file:
+*	0x003DD120 |	800080FF 81007FFF 81007FFF 82007EFF 82007EFF 82007EFF 83007DFF 83007DFF 	|   A A B B B C C 
+*/
+#define BYTES_PER_DUMP_LINE			32
+#define TEXT_PER_DUMP_LINE  		16
+#define ADDRESS_PER_DUMP_LINE		11
+#define SPACES_PER_BYTE_DUMP_LINE	10
+#define BYTES_PER_SEGMENT			4

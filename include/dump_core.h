@@ -14,15 +14,6 @@
 #endif
 
 /*!
-*	An example line from a dump file:
-*	0x003DD120 |	800080FF 81007FFF 81007FFF 82007EFF 82007EFF 82007EFF 83007DFF 83007DFF 	|   A A B B B C C 
-*/
-#define BYTES_PER_DUMP_LINE			32
-#define TEXT_PER_DUMP_LINE  		16
-#define ADDRESS_PER_DUMP_LINE		11
-#define SPACES_PER_BYTE_DUMP_LINE	10
-
-/*!
 *	Given a dump file, calculate the amount of lines in the file so buffers for the rom and text sections can be alloc'd.
 */
 int get_dump_amount_of_lines( dump_file* );

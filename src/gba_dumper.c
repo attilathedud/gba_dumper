@@ -18,6 +18,12 @@
 #include "../include/output.h"
 #include "../include/translate.h"
 
+/*!
+*	Helper function to clean up memory on program exit.
+*
+*	rom:	A pointer to the rom file being used.
+*	dump:	A pointer the dump file being used.
+*/
 void cleanup( rom_file *rom, dump_file *dump )
 {
 	if( rom != NULL && rom->rom_buffer != NULL )
@@ -53,7 +59,7 @@ int main( int argc, char** argv )
 	{
 		if( get_rom_length( &rom ) == -1 )
 		{
-			//no need to cleanup here as we haven't allocated anything yet
+			//No need to cleanup here as we haven't allocated anything yet
 			fprintf( stderr, "Error getting rom length.\n" );
 			return -1;
 		}
@@ -93,8 +99,8 @@ int main( int argc, char** argv )
 				printf("Attempt to generate a translation file? (if yes, type file name. For no, type nothing):\n");
 				getline( &translate_file_path, &file_path_len, stdin );
 
-				//strip newline characters from input name
-				//see https://stackoverflow.com/questions/2693776/removing-trailing-newline-character-from-fgets-input/28462221#28462221
+				//Strip newline characters from input name
+				//https://stackoverflow.com/questions/2693776/removing-trailing-newline-character-from-fgets-input/28462221#28462221
 				translate_file_path[ strcspn( translate_file_path, "\r\n" ) ] = 0;
 
 				if( strlen( translate_file_path ) > 0 )
