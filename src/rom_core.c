@@ -100,8 +100,8 @@ int read_translation_file( char *filename )
 {
 	FILE *translation_file 				= NULL;
 
-	char *cur_line						= NULL;
 	char readable 						= 0;
+	char *cur_line						= NULL;
 
 	unsigned char byte_hex[ 2 ]			= { 0 };
 	unsigned char byte_literal[ 4 ]		= { 0 };
