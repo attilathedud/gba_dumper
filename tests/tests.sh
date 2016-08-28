@@ -15,9 +15,9 @@ diff_and_cleanup()
 	then
 		if cmp -s "$1" "$2"
 		then
-			echo "\"$3\" test passed."
+			echo "$(tput setaf 2)Passed: $(tput sgr0) \"$3\" test"
 		else
-			echo "\"$3\" test failed." 
+			echo "$(tput setaf 1)Failed: $(tput sgr0) \"$3\" test" 
 		fi
 	else
 		echo "Not enough parameters passed to diff_and_cleanup() function."
