@@ -53,7 +53,6 @@ int read_dump_file( dump_file *dump )
 {
 	FILE *dump_file 																	= NULL;
 
-	char *cur_line																		= NULL;
 	size_t cur_len 																		= 0;
 
 	unsigned char address[ ADDRESS_PER_DUMP_LINE ]										= { 0 };
@@ -62,6 +61,8 @@ int read_dump_file( dump_file *dump )
 	unsigned char translated_literal[ TEXT_PER_DUMP_LINE + 2 ] 							= { 0 };	//the extra 2 to account for spaces read in via sscanf
 
 	unsigned long cur_rom_buffer_pos													= 0;
+
+	char *cur_line																		= NULL;
 
 	if( dump == NULL || dump->dump_path == NULL || dump->rom_buffer == NULL || dump->translated_buffer == NULL )
 		return -1;	
@@ -87,8 +88,6 @@ int read_dump_file( dump_file *dump )
 
 		memset( translated_literal, 0, TEXT_PER_DUMP_LINE + 2 );
 	}
-
-	free( cur_line );
 
 	fclose( dump_file );
 
