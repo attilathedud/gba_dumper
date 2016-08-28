@@ -51,3 +51,9 @@ diff_and_cleanup "correct/test5.str" "generated_test5.str" "Dumping strings"
 # Reuploading modified strings
 ../gba_dumper -m correct/test4.dmp -s input/test6.str -b 00FF -a 0x00307920 -e 0x003086A0 > generated_test6.dmp
 diff_and_cleanup "correct/test6.dmp" "generated_test6.dmp" "Reuploading modified strings"
+
+# Writing back changes to a new rom
+../gba_dumper -m correct/test6.dmp -t input/test7.tra > generated_test7.gba
+../gba_dumper -f generated_test7.gba -t input/test7.tra > generated_test7.dmp
+rm generated_test7.gba
+diff_and_cleanup "correct/test7.dmp" "generated_test7.dmp" "Writing back changes to new rom"
