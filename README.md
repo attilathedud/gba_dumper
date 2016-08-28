@@ -12,6 +12,7 @@ gba_dumper is a set of utilites designed to make text modifications for Game Boy
 7. Using the modified dump, create a new rom.
 
 ###Options
+```
 -f	Path to the rom to perform operations on. This must be the uncompressed .gba file.
 -r	Text to search for within the rom.
 -z	When searching for text, the amount of fuzz (or allowed error) to apply.
@@ -22,6 +23,7 @@ gba_dumper is a set of utilites designed to make text modifications for Game Boy
 -a	When dumping strings, the start address of memory to start dumping at.
 -e	When dumping strings, the end address of memory to end dumping at.
 -s	Path to a valid strings file to write back to the dump, which is a newline separated list of strings.
+```
 
 ###Example Usage
 ```bash
@@ -79,8 +81,10 @@ DA00 : z
 Other example translation files can be found in the tests/ directory.
 
 ###Dump Files
-Dump files represent the formatted bytes of the rom with translations applied (if applicable). An example line is:
+Dump files represent the formatted bytes of the rom with translations applied (if applicable). An example line is
+```
 0x003DD120 |	800080FF 81007FFF 81007FFF 82007EFF 82007EFF 82007EFF 83007DFF 83007DFF 	|   A A B B B C C 
+```
 
 When modifying dump files, always modify the text section (farthest right section). The byte section is used as a sanity check when writing back changes.
 
