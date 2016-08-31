@@ -27,14 +27,14 @@ char* help_text 				=  "gba_dumper v1.0 by Nathan Tucker.\n\n" \
 								   "-d\tDump the formatted bytes of the rom.\n"\
 								   "-t\tPath to a valid translation file, which is newline separated list of byte_value : character values (e.g., 00FF : b).\n"\
 								   "-m\tPath to a valid dump file, which is automatically generated after translating the rom.\n"\
-								   "-b\tThe two-byte value that the game uses for segment breaks within contiguous memory spaces\n"\
+								   "-b\tThe two-byte value that the game uses for segment breaks within contiguous memory spaces.\n"\
 								   "-a\tWhen dumping strings, the start address of memory to start dumping at.\n"\
 								   "-e\tWhen dumping strings, the end address of memory to end dumping at.\n"\
 								   "-s\tPath to a valid strings file to write back to the dump, which is a newline separated list of strings.\n\n"\
 								   "Example Usage:\n"\
 								   "Step 1:\t$ gba_dumper -f roms/rom.gba -r \"Example\"\n" \
 								   "\t1: 0x00721940	C100D300D300C900C700CE00C500C400\n"\
-								   "\tAttempt to generate a translation file? (if yes, type file name. For no, type nothing):\n"\
+								   "\tAttempt to generate a translation file? (Yes, type file name. No, type nothing):\n"\
 								   "\trom.tra\n"\
 								   "Step 3:\t $ gba_dumper -f roms/rom.gba -t rom.tra > rom.dmp\n"\
 								   "Step 5:\t $ gba_dumper -m rom.dmp -b 00FF -a 0x00721920 -e 0x007226A0 > rom.str\n"\

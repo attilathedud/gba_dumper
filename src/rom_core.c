@@ -135,7 +135,10 @@ int read_translation_file( char *filename )
 		readable = 0;
 	}
 
-	free( cur_line );
+	if( cur_line != NULL )
+	{
+		free( cur_line );
+	}
 
 	fclose( translation_file );
 

@@ -32,9 +32,9 @@ gba_dumper is a set of utilities designed to make text modifications for Game Bo
 # Step 1
 $ gba_dumper -f roms/rom.gba -r "Example"
 
-	# Step 2 will be prompted automatically after a successful search
+	# Step 2 will be prompted automatically after a successful search.
 	1: 0x00721940	C100D300D300C900C700CE00C500C400
-	Attempt to generate a translation file? (if yes, type file name. For no, type nothing):
+	Attempt to generate a translation file? (Yes, type file name. No, type nothing):
 	rom.tra
 
 # Step 3	 
@@ -42,7 +42,7 @@ $ gba_dumper -f roms/rom.gba -t rom.tra > rom.dmp
 
 # Step 4 
 # Manually inspect the dump and use context-clues from strings you know to add symbols to the translation set.
-# When you have a complete translation set, re-dump
+# When you have a complete translation set, re-dump.
 
 # Step 5	 
 $ gba_dumper -m rom.dmp -b 00FF -a 0x00721920 -e 0x007226A0 > rom.str
@@ -102,13 +102,13 @@ Load up a new game of Metroid Fusion. The starting text displayed is:
 I'd been assigned to watch over Biologic's research team,
 ```
 
-gba_dumper will automatically generated a translation set for all upper-and-lowercase letters provided you search for a word with both in it. So we will search for "Biologic":
+gba_dumper will automatically generate a translation set for all upper- and lowercase letters provided you search for a word with both in it. So we will search for "Biologic":
 ```
 $ gba_dumper -f metroid.gba -r "Biologic"
 No matches found. Try adding fuzz - or your text might actually be a graphic.
 ```
 
-Often times, upper-case letters in games won't be separated the expected distance away from lower-case letters as the developers will place special characters between the two in the character set. As a result, we'll apply fuzzing:
+Often times, uppercase letters in games won't be separated the expected distance away from lowercase letters if the developers  place special characters between the two in the character set. As a result, we'll apply fuzzing:
 ```
 $ gba_dumper -f metroid.gba -r "Biologic" -z 1
 1: 0x00700AF6	C200C900CF00CC00CF00C700C900C300
@@ -123,11 +123,11 @@ $ gba_dumper -f metroid.gba -r "Biologic" -z 1
 ```
 
 ###Step 2
-So the fuzz has introduced us several options - how do we choose? The easiest way is to look for multiple results of the same series of bytes (in this case, 3-8). In the case there is not that giveaway, simple start generating from the first result: incorrect mappings will be evident as the translation file won't contain all the characters in the alphabet.
+So the fuzz has introduced us to several options - how do we choose? The easiest way is to look for multiple results of the same series of bytes (in this case, 3-8). In the case there is not that giveaway, simply start generating from the first result: incorrect mappings will be evident as the translation file won't contain all the characters in the alphabet.
 
 In this case, we will choose set 3:
 ```
-Attempt to generate a translation file? (if yes, type file name. For no, type nothing):
+Attempt to generate a translation file? (Yes, type file name. No, type nothing):
 metroid.tra
 Ambiguous data set provided. Please select a data set to use: 
 3
@@ -230,7 +230,7 @@ Save, and follow Step 3 to re-dump the rom:
 0x007219A0 |	00FC00FD D300CF00 40008900 4000CF00 CE00C300 C5004000 C100C700 C100C900 	|   so I once agai
 ```
 
-Continue to do this for any other special characters you encounter. Note that '4000' is being used as a space. A full translation file with most of the opening text translated for comparison:
+Continue to do this for any other special characters you encounter. Note that '4000' is being used as a space. Here's a full translation file with most of the opening text translated for comparison:
 ```
 8100 : A
 8200 : B
@@ -296,7 +296,7 @@ DA00 : z
 ```
 
 ###Step 5
-With our translation good enough, let's move on to dumping the opening section's text so we can edit it all at once. The numbers on the far-left of the dump represent the address of the bytes. Judging by the text, it should be easy to identify the start and end:
+With an acceptable translation, let's move on to dumping the opening section's text so we can edit it all at once. The numbers on the far-left of the dump represent the address of the bytes. Judging by the text, it should be easy to identify the start and end:
 ```
 0x00721900 |	D40000FE D000CF00 D300D300 C900C200 CC00C500 1F044000 8100C400 C100CD00 	| t possible  Adam
 0x00721920 |	4E004E00 4E001F04 14E100FC 00FF8900 4700C400 4000C200 C500C500 CE004000 	| ...    I'd been 
@@ -313,7 +313,7 @@ Next we need the break character, or the byte-values that separate strings of te
 0x007226A0 |	8400C500 D2004000 9300C300 C800C900 C600C600 D300C300 CF00CD00 D000D500 	| Der Schiffscompu
 ```
 
-We know '4E00' is a '.' which means either 00FF has to represent the last character, or our break character. Let's try it and see what our dump looks like:
+We know '4E00' is a '.' which means either 00FF has to represent the last character or our break character. Let's try it and see what our dump looks like:
 ```
 $ gba_dumper -m metroid.dmp -b 00FF -a 0x00721920 -e 0x007226A0 > metroid.str
 ```

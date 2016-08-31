@@ -136,13 +136,19 @@ void delete_hashes() {
   HASH_ITER(hh, byte_to_readable_translation_set, current, tmp) 
   {
   	HASH_DEL( byte_to_readable_translation_set, current ); 
-  	free( current );            
+  	if( current != NULL )
+  	{
+  		free( current );    
+  	}        
   }
 
   HASH_ITER(hh, readable_to_byte_translation_set, current, tmp) 
   {
   	HASH_DEL( readable_to_byte_translation_set, current ); 
-  	free( current );            
+  	if( current != NULL )
+  	{
+  		free( current );    
+  	}        
   }
 }
 

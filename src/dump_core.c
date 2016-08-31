@@ -32,7 +32,10 @@ int get_dump_amount_of_lines( dump_file *dump )
 		amount_of_lines++;
 	}
 
-	free( cur_line );
+	if( cur_line != NULL)
+	{
+		free( cur_line );
+	}
 
 	fclose( dump_file );
 
@@ -87,6 +90,11 @@ int read_dump_file( dump_file *dump )
 		cur_rom_buffer_pos += BYTES_PER_DUMP_LINE;
 
 		memset( translated_literal, 0, TEXT_PER_DUMP_LINE + 2 );
+	}
+
+	if( cur_line != NULL )
+	{
+		free( cur_line );
 	}
 
 	fclose( dump_file );
@@ -228,7 +236,10 @@ int read_and_translate_dump_strings( dump_file *dump, char* strings_file_path, u
 		cur_dump_offset += 2;
 	}
 
-	free( cur_line );
+	if( cur_line != NULL )
+	{
+		free( cur_line );
+	}
 
 	fclose( strings_file );
 

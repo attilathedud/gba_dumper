@@ -59,8 +59,11 @@ int generate_translation_set_from_matches( rom_file *rom, char* translate_file_p
 
 	if( rom == NULL || rom->rom_buffer == NULL || matches== NULL || relative_search_text == NULL )
 	{
-		free( data1 );
-		free( data2 );
+		if( data1 != NULL && data2 != NULL )
+		{
+			free( data1 );
+			free( data2 );
+		}
 		return -1;
 	}
 
@@ -82,8 +85,11 @@ int generate_translation_set_from_matches( rom_file *rom, char* translate_file_p
 
 	if( difference_flag )
 	{
-		free( data1 );
-		free( data2 );
+		if( data1 != NULL && data2 != NULL )
+		{	
+			free( data1 );
+			free( data2 );
+		}
 		return -2;
 	}
 
@@ -113,7 +119,10 @@ int generate_translation_set_from_matches( rom_file *rom, char* translate_file_p
 
 	delete_hashes( );
 
-	free( data1 );
-	free( data2 );
+	if( data1 != NULL && data2 != NULL )
+	{
+		free( data1 );
+		free( data2 );
+	}
 	return successful_write_flag;
 }

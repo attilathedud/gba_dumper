@@ -96,7 +96,7 @@ int main( int argc, char** argv )
 
 				char *translate_file_path;
 
-				printf("Attempt to generate a translation file? (if yes, type file name. For no, type nothing):\n");
+				printf("Attempt to generate a translation file? (Yes, type file name. No, type nothing):\n");
 				getline( &translate_file_path, &file_path_len, stdin );
 
 				//Strip newline characters from input name
@@ -114,13 +114,16 @@ int main( int argc, char** argv )
 						{
 							fprintf( stderr, "Error while generating the translation file.\n" );
 
-							free( translate_file_path );
+							if( translate_file_path != NULL )
+							{
+								free( translate_file_path );
+							}
 							cleanup( &rom, &dump );
 							return -1;
 						}
 						else if( translation_return_info == -2 )
 						{
-							printf( "Ambigious data set provided. Please select a data set to use: \n" );
+							printf( "Ambiguous data set provided. Please select a data set to use: \n" );
 
 							size_t match_number_length			= 0;
 
@@ -147,12 +150,18 @@ int main( int argc, char** argv )
 
 							generate_translation_set_from_matches( &rom, translate_file_path, &matches, options.relative_search_text );
 
-							free( match_number_selected );
+							if( match_number_selected != NULL )
+							{
+								free( match_number_selected );
+							}
 						}
 					}
 				}
 
-				free( translate_file_path );
+				if( translate_file_path != NULL )
+				{
+					free( translate_file_path );
+				}
 			}
 
 			cleanup( &rom, &dump );
