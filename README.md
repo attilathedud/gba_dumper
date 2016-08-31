@@ -1,6 +1,6 @@
 # gba_dumper
 
-![Metroid Intro Changed](http://imgur.com/a/RDB5n)
+![Metroid Intro Changed](https://i.imgur.com/rI0fjlz.png)
 
 gba_dumper is a set of utilities designed to make text modifications for Game Boy Advanced (gba) roms easier. Since gba games don't use ASCII and instead each use their own homebrew-encoding, gba_dumper streamlines the approach of translating rom byte-codes into human-readable characters.
 
