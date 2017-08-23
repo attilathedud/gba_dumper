@@ -4,7 +4,7 @@
 
 gba_dumper is a set of utilities designed to make text modifications for Game Boy Advanced (gba) roms easier. Since gba games don't use ASCII and instead each use their own homebrew-encoding, gba_dumper streamlines the approach of translating rom byte-codes into human-readable characters.
 
-###Intended workflow
+### Intended workflow
 1. Search for a string of text.
 2. Using the matches, let gba_dumper create a translation file. If there are multiple conflicting matches, gba_dumper will prompt you to choose the matching set.
 3. Using that translation file, dump a "translated" version of the rom.
@@ -13,7 +13,7 @@ gba_dumper is a set of utilities designed to make text modifications for Game Bo
 6. Dump the memory noted in 5, edit all the strings you want, and re-upload them to a new dump.
 7. Using the modified dump, create a new rom.
 
-###Options
+### Options
 ```
 -f	Path to the rom to perform operations on. This must be the uncompressed .gba file.
 -r	Text to search for within the rom.
@@ -27,7 +27,7 @@ gba_dumper is a set of utilities designed to make text modifications for Game Bo
 -s	Path to a valid strings file to write back to the dump, which is a newline separated list of strings.
 ```
 
-###Example Usage
+### Example Usage
 ```bash
 # Step 1
 $ gba_dumper -f roms/rom.gba -r "Example"
@@ -54,7 +54,7 @@ $ gba_dumper -m rom.dmp -s rom.str -b 00FF -a 0x00721920 -e 0x007226A0 > rom2.dm
 $ gba_dumper -m rom2.dmp -t rom.tra > rom2.gba
 ```
 
-###Translation Files
+### Translation Files
 Translation files are newline separated lists of byte_values : character pairs that map byte_values to a specific character. Multiple byte_values can map to the same character, but multiple characters can not be mapped to the same byte_value. When writing back changes to a new rom, characters that are mapped to by multiple bytes will pick the first byte pair to write back. To avoid this, simply remove these extra encodings from your translation file and they will be ignored.
 
 If you select an invalid mapping in step 2 (which can happen if your fuzz is too high), gba_dumper will generate a noticeably incomplete translation file.
@@ -82,7 +82,7 @@ DA00 : z
 
 Other example translation files can be found in the tests/ directory.
 
-###Dump Files
+### Dump Files
 Dump files represent the formatted bytes of the rom with translations applied (if applicable). An example line is
 ```
 0x003DD120 |	800080FF 81007FFF 81007FFF 82007EFF 82007EFF 82007EFF 83007DFF 83007DFF 	|   A A B B B C C 
@@ -90,13 +90,13 @@ Dump files represent the formatted bytes of the rom with translations applied (i
 
 When modifying dump files, always modify the text section (farthest right section). The byte section is used as a sanity check when writing back changes.
 
-###String files
+### String files
 String files are newline separated lists of strings from a section of the rom's memory, broken up by the applied "break" character in the game. When making changes, it is important to note the length of the original line. If you substitute in a smaller string, gba_dumper will pad out the remaining memory with spaces; with a larger string, gba_dumper will simply cut off any letters that exceed the size. 
 
-#Tutorial
+# Tutorial
 To illustrate the major steps of gba_dumper, let's modify the opening text of Metroid Fusion.
 
-###Step 1
+### Step 1
 Load up a new game of Metroid Fusion. The starting text displayed is:
 ```
 I'd been assigned to watch over Biologic's research team,
@@ -122,7 +122,7 @@ $ gba_dumper -f metroid.gba -r "Biologic" -z 1
 9: 0x0072B23C	C200C900CF00CC00CF00C700C900C300
 ```
 
-###Step 2
+### Step 2
 So the fuzz has introduced us to several options - how do we choose? The easiest way is to look for multiple results of the same series of bytes (in this case, 3-8). In the case there is not that giveaway, simply start generating from the first result: incorrect mappings will be evident as the translation file won't contain all the characters in the alphabet.
 
 In this case, we will choose set 3:
@@ -190,7 +190,7 @@ DA00 : z
 
 ```
 
-###Step 3
+### Step 3
 Next we will use this metroid.tra to translate the rom:
 ```
 $ gba_dumper -f roms/met.gba -t metroid.tra > metroid.dmp
@@ -206,7 +206,7 @@ Opening up metroid.dmp will reveal these first few lines if you did it correctly
 0x000000A0 |	4D455452 4F494434 55534100 414D5445 30319600 00000000 00000000 00980000 	|          V    
 ```
 
-###Step 4
+### Step 4
 Now we have to use our minds a bit to fill in special symbols that gba_dumper can't guess. In metroid.dmp, do a search for "Biologic" and look at the one that reflects our opening text:
 ```
 0x00721920 |	4E004E00 4E001F04 14E100FC 00FF8900 4700C400 4000C200 C500C500 CE004000 	|        I d been 
@@ -295,7 +295,7 @@ DA00 : z
 
 ```
 
-###Step 5
+### Step 5
 With an acceptable translation, let's move on to dumping the opening section's text so we can edit it all at once. The numbers on the far-left of the dump represent the address of the bytes. Judging by the text, it should be easy to identify the start and end:
 ```
 0x00721900 |	D40000FE D000CF00 D300D300 C900C200 CC00C500 1F044000 8100C400 C100CD00 	| t possible  Adam
@@ -334,7 +334,7 @@ Pondering this fact, I realize...  I owe the Metroid hatchling my life twice ove
 We'll soon be arriving at the B.S.L research station.  I must prepare for docking. 
 ```
 
-###Step 6
+### Step 6
 We can modify metroid.str however we want, but for now, we'll keep it simple:
 ```
 ...   
@@ -375,7 +375,7 @@ gba_dumper will pad out strings that are too short with spaces, as you can see w
 0x00721AA0 |	C4004000 C200C500 C600CF00 D200C500 4E0000FC 00FF8900 D4004000 D700C100 	|            LIKE 
 ```
 
-###Step 7
+### Step 7
 With all this done, we are ready to create a new rom with our changes:
 ```
 $ gba_dumper -m metroid2.dmp -t metroid.tra > metroid2.gba
